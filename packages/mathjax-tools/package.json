@@ -1,0 +1,20 @@
+{
+  "name": "mathjax-tools",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Tools for MathJax Intellisense.",
+  "author": "Casper Huang <casper.w.huang@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/howcasperwhat/mathjax-intellisense#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howcasperwhat/mathjax-intellisense.git",
+    "directory": "packages/mathjax-tools"
+  },
+  "bugs": "https://github.com/howcasperwhat/mathjax-intellisense/issues",
+  "keywords": [],
+  "main": "src/index.ts",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

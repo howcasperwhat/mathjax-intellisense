@@ -1,0 +1,27 @@
+packages:
+  - extensions/*
+  - packages/*
+
+catalogs:
+  bundling:
+    tsup: ^8.3.6
+    typescript: ^5.7.3
+  deps:
+    fast-glob: ^3.3.3
+    mathjax-full: ^3.2.2
+    pathe: ^2.0.3
+  lint:
+    '@antfu/eslint-config': ^4.2.0
+    eslint: ^9.20.0
+    jiti: ^2.4.2
+  types:
+    '@types/node': 18.x
+    '@types/vscode': ^1.84.0
+  vscode:
+    '@vscode/vsce': ^3.6.0
+    reactive-vscode: ^0.2.13
+    vscode-ext-gen: ^1.0.0
+ignoredBuiltDependencies:
+  - '@vscode/vsce-sign'
+  - esbuild
+  - keytar

@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Extension for C++",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/extensions/mathjax-intellisense-cpp"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/extensions/mathjax-intellisense-cpp/dist/**/*.js"
+      ],
+      "preLaunchTask": "npm: dev:cpp"
+    },
+    {
+      "name": "Run Extension for Python",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/extensions/mathjax-intellisense-python"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/extensions/mathjax-intellisense-python/dist/**/*.js"
+      ],
+      "preLaunchTask": "npm: dev:python"
+    }
+  ]
+}

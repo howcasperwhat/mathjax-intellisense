@@ -1,0 +1,43 @@
+{
+  "name": "mathjax-intellisense",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.7.0",
+  "workspaces": [
+    "extensions/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "update": "pnpm run update:cpp && pnpm run update:python",
+    "update:cpp": "pnpm -C extensions/mathjax-intellisense-cpp run update",
+    "update:python": "pnpm -C extensions/mathjax-intellisense-python run update",
+    "dev:cpp": "pnpm -C extensions/mathjax-intellisense-cpp run dev",
+    "dev:python": "pnpm -C extensions/mathjax-intellisense-python run dev",
+    "pack:cpp": "pnpm -C extensions/mathjax-intellisense-cpp run pack",
+    "pack:python": "pnpm -C extensions/mathjax-intellisense-python run pack"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:lint",
+    "@types/node": "catalog:types",
+    "@types/vscode": "catalog:types",
+    "@vscode/vsce": "catalog:vscode",
+    "eslint": "catalog:lint",
+    "fast-glob": "catalog:deps",
+    "jiti": "catalog:lint",
+    "mathjax-full": "catalog:deps",
+    "pathe": "catalog:deps",
+    "reactive-vscode": "catalog:vscode",
+    "simple-git-hooks": "^2.13.0",
+    "tsup": "catalog:bundling",
+    "typescript": "catalog:bundling",
+    "vscode-ext-gen": "catalog:vscode"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}
