@@ -14,6 +14,7 @@ catalogs:
     '@antfu/eslint-config': ^4.2.0
     eslint: ^9.20.0
     jiti: ^2.4.2
+    simple-git-hooks: ^2.13.0
   types:
     '@types/node': 18.x
     '@types/vscode': ^1.84.0
@@ -25,3 +26,4 @@ ignoredBuiltDependencies:
   - '@vscode/vsce-sign'
   - esbuild
   - keytar
+  - simple-git-hooks
