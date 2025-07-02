@@ -1,10 +1,10 @@
 {
   "publisher": "howcasperwhat",
   "name": "mathjax-intellisense-cpp",
-  "displayName": "MathJax Intellisense for C++",
+  "displayName": "MathJax Intellisense for C/C++",
   "version": "0.0.0",
   "preview": true,
-  "description": "A VS Code extension that provides MathJax intellisense for C++.",
+  "description": "A VS Code extension that provides MathJax intellisense for C/C++.",
   "license": "MIT",
   "homepage": "https://github.com/howcasperwhat/mathjax-intellisense#readme",
   "repository": {
