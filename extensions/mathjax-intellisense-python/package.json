@@ -46,6 +46,7 @@
     "pathe": "catalog:deps",
     "reactive-vscode": "catalog:vscode",
     "typescript": "catalog:bundling",
-    "vscode-ext-gen": "catalog:vscode"
+    "vscode-ext-gen": "catalog:vscode",
+    "xstate": "catalog:deps"
   }
 }

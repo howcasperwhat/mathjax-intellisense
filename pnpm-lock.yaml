@@ -22,6 +22,9 @@ catalogs:
     pathe:
       specifier: ^2.0.3
       version: 2.0.3
+    xstate:
+      specifier: ^5.20.0
+      version: 5.20.0
   lint:
     '@antfu/eslint-config':
       specifier: ^4.2.0
@@ -39,9 +42,6 @@ catalogs:
     '@types/node':
       specifier: 18.x
       version: 18.19.113
-    '@types/vscode':
-      specifier: ^1.84.0
-      version: 1.101.0
   vscode:
     '@vscode/vsce':
       specifier: ^3.6.0
@@ -60,33 +60,15 @@ importers:
       '@antfu/eslint-config':
         specifier: catalog:lint
         version: 4.16.1(@vue/compiler-sfc@3.5.17)(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3)
-      '@types/node':
-        specifier: catalog:types
-        version: 18.19.113
-      '@types/vscode':
-        specifier: catalog:types
-        version: 1.101.0
       '@vscode/vsce':
         specifier: catalog:vscode
         version: 3.6.0
       eslint:
         specifier: catalog:lint
         version: 9.30.0(jiti@2.4.2)
-      fast-glob:
-        specifier: catalog:deps
-        version: 3.3.3
       jiti:
         specifier: catalog:lint
         version: 2.4.2
-      mathjax-full:
-        specifier: catalog:deps
-        version: 3.2.2
-      pathe:
-        specifier: catalog:deps
-        version: 2.0.3
-      reactive-vscode:
-        specifier: catalog:vscode
-        version: 0.2.22(@types/vscode@1.101.0)
       simple-git-hooks:
         specifier: catalog:lint
         version: 2.13.0
@@ -133,6 +115,12 @@ importers:
       vscode-ext-gen:
         specifier: catalog:vscode
         version: 1.1.0
+      vscode-textmate-languageservice:
+        specifier: ^4.0.0
+        version: 4.0.0
+      xstate:
+        specifier: catalog:deps
+        version: 5.20.0
 
   extensions/mathjax-intellisense-python:
     dependencies:
@@ -167,6 +155,9 @@ importers:
       vscode-ext-gen:
         specifier: catalog:vscode
         version: 1.1.0
+      xstate:
+        specifier: catalog:deps
+        version: 5.20.0
 
   packages/mathjax-tools: {}
 
@@ -2729,6 +2720,10 @@ packages:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
 
+  type-fest@1.0.0:
+    resolution: {integrity: sha512-Q75/Kan//7GSHmyXvG5kQdLSuF+PJzOv2sc6XyhAYCvR4xoAF5qHI2mKmhkpMOtvrfn9FSh376dGaZbdWL/vgQ==}
+    engines: {node: '>=10'}
+
   type-fest@3.13.1:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
@@ -2811,6 +2806,13 @@ packages:
     resolution: {integrity: sha512-xJ239JqH1ID5B105oCCu9tcpzB1u+KjtjopHeHQX4Gf6Oca66nxd3NFvUl4A7E+kbJsBLK9qZjkEA01zGGG7Jg==}
     hasBin: true
 
+  vscode-textmate-languageservice@4.0.0:
+    resolution: {integrity: sha512-TPT5XZdgbeVTIMO4alPVMdFnEzDcLRFg9hpE0Iaj29+GtDUQcF8LnkZFtuvtEfD6URB+oOadA7oN06lv+sNA6A==}
+    engines: {vscode: ^1.55.0}
+
+  vscode-textmate@9.2.0:
+    resolution: {integrity: sha512-rkvG4SraZQaPSN/5XjwKswdU0OP9MF28QjrYzUBbhb8QyG3ljB1Ky996m++jiI7KdiAP2CkBiQZd9pqEDTClqA==}
+
   vue-eslint-parser@10.2.0:
     resolution: {integrity: sha512-CydUvFOQKD928UzZhTp4pr2vWz1L+H99t7Pkln2QSPdvmURT0MoC4wUccfCnuEaihNsu9aYYyk+bep8rlfkUXw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2865,6 +2867,9 @@ packages:
   xmlbuilder@11.0.1:
     resolution: {integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==}
     engines: {node: '>=4.0'}
+
+  xstate@5.20.0:
+    resolution: {integrity: sha512-lFQ0fLwVa0OMZnjNP8zUkt2fwIS85ZBNPvxE41APVYhYj0++aTssgmsnTAiBHdKYbgnd6+L8DRTZ9jPZAFPuyw==}
 
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
@@ -5810,6 +5815,8 @@ snapshots:
 
   type-fest@0.21.3: {}
 
+  type-fest@1.0.0: {}
+
   type-fest@3.13.1: {}
 
   type-fest@4.41.0: {}
@@ -5882,6 +5889,14 @@ snapshots:
     dependencies:
       cac: 6.7.14
 
+  vscode-textmate-languageservice@4.0.0:
+    dependencies:
+      '@types/vscode': 1.101.0
+      type-fest: 1.0.0
+      vscode-textmate: 9.2.0
+
+  vscode-textmate@9.2.0: {}
+
   vue-eslint-parser@10.2.0(eslint@9.30.0(jiti@2.4.2)):
     dependencies:
       debug: 4.4.1
@@ -5939,6 +5954,8 @@ snapshots:
       xmlbuilder: 11.0.1
 
   xmlbuilder@11.0.1: {}
+
+  xstate@5.20.0: {}
 
   yallist@4.0.0: {}
 
