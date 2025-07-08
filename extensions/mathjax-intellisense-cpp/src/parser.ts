@@ -147,7 +147,7 @@ const FormulaStatus = {
               return BEGIN_MARKS.includes(event.char as MarkBegin)
             },
             target: 'Inside',
-            actions: assign({ end: (event: CharacterEvent) => {
+            actions: assign({ end: (_, event: CharacterEvent) => {
               return MARKS_MAP[event.char as MarkBegin] as MarkEnd
             } }),
           },
@@ -271,7 +271,7 @@ const InTripleSlashDoc = {
     // }
     // ERROR: BLOCK_END
   },
-} as const
+} as any
 
 const StarStatus = {
   initial: 'Wait',
@@ -327,7 +327,7 @@ const InBlockDoc = {
     EOF: 'Done',
     BLOCK_END: 'SeekDoc',
   },
-} as const
+} as any
 
 const Done = {
   type: 'final',
