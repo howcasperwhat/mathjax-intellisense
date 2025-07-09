@@ -2,6 +2,7 @@
   "name": "mathjax-tools",
   "type": "module",
   "version": "0.0.0",
+  "private": true,
   "description": "Tools for MathJax Intellisense.",
   "author": "Casper Huang <casper.w.huang@qq.com>",
   "license": "MIT",
@@ -16,5 +17,8 @@
   "main": "src/index.ts",
   "scripts": {},
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "mathjax-full": "catalog:deps",
+    "vscode-textmate-languageservice": "catalog:deps"
+  }
 }

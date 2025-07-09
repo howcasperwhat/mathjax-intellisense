@@ -22,9 +22,12 @@ catalogs:
     pathe:
       specifier: ^2.0.3
       version: 2.0.3
+    vscode-textmate-languageservice:
+      specifier: ^4.0.0
+      version: 4.0.0
     xstate:
-      specifier: ^4.38.3
-      version: 4.38.3
+      specifier: ^5.20.0
+      version: 5.20.1
   lint:
     '@antfu/eslint-config':
       specifier: ^4.2.0
@@ -100,9 +103,6 @@ importers:
       fast-glob:
         specifier: catalog:deps
         version: 3.3.3
-      mathjax-full:
-        specifier: catalog:deps
-        version: 3.2.2
       pathe:
         specifier: catalog:deps
         version: 2.0.3
@@ -115,12 +115,9 @@ importers:
       vscode-ext-gen:
         specifier: catalog:vscode
         version: 1.1.0
-      vscode-textmate-languageservice:
-        specifier: ^4.0.0
-        version: 4.0.0
       xstate:
         specifier: catalog:deps
-        version: 4.38.3
+        version: 5.20.1
 
   extensions/mathjax-intellisense-python:
     dependencies:
@@ -157,9 +154,16 @@ importers:
         version: 1.1.0
       xstate:
         specifier: catalog:deps
-        version: 4.38.3
+        version: 5.20.1
 
-  packages/mathjax-tools: {}
+  packages/mathjax-tools:
+    devDependencies:
+      mathjax-full:
+        specifier: catalog:deps
+        version: 3.2.2
+      vscode-textmate-languageservice:
+        specifier: catalog:deps
+        version: 4.0.0
 
 packages:
 
@@ -2868,8 +2872,8 @@ packages:
     resolution: {integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==}
     engines: {node: '>=4.0'}
 
-  xstate@4.38.3:
-    resolution: {integrity: sha512-SH7nAaaPQx57dx6qvfcIgqKRXIh4L0A1iYEqim4s1u7c9VoCgzZc+63FY90AKU4ZzOC2cfJzTnpO4zK7fCUzzw==}
+  xstate@5.20.1:
+    resolution: {integrity: sha512-i9ZpNnm/XhCOMUxae1suT8PjYNTStZWbhmuKt4xeTPaYG5TS0Fz0i+Ka5yxoNPpaHW3VW6JIowrwFgSTZONxig==}
 
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
@@ -5955,7 +5959,7 @@ snapshots:
 
   xmlbuilder@11.0.1: {}
 
-  xstate@4.38.3: {}
+  xstate@5.20.1: {}
 
   yallist@4.0.0: {}
 

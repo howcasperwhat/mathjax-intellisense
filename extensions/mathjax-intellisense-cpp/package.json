@@ -42,12 +42,10 @@
     "@types/vscode": "^1.84.0",
     "@vscode/vsce": "catalog:vscode",
     "fast-glob": "catalog:deps",
-    "mathjax-full": "catalog:deps",
     "pathe": "catalog:deps",
     "reactive-vscode": "catalog:vscode",
     "typescript": "catalog:bundling",
     "vscode-ext-gen": "catalog:vscode",
-    "vscode-textmate-languageservice": "^4.0.0",
     "xstate": "catalog:deps"
   }
 }
