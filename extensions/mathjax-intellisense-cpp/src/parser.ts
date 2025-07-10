@@ -1,44 +1,29 @@
-import type { useTokenService } from 'mathjax-tools/src/token-service'
-import type { Range } from 'vscode'
+import { Range } from 'vscode'
 import { assign, createActor, createMachine, raise } from 'xstate'
+import { useTokenService } from 'mathjax-intellisense-tools'
 
 // https://www.doxygen.nl/manual/formulas.html
 
-const BEGIN_MARKS = ['$', '(', '[', '{'] as const
-// eslint-disable-next-line unused-imports/no-unused-vars
-const END_MARKS = ['$', ')', ']', '}'] as const
-const MARKS_MAP = {
-  '$': '$',
-  '(': ')',
-  '[': ']',
-  '{': '}',
+export const FORMULA_MARKERS = {
+  '$': { name: '$$', start: '$', end: '$' },
+  '(': { name: '()', start: '(', end: ')' },
+  '[': { name: '[]', start: '[', end: ']' },
+  '{': { name: '{}', start: '{', end: '}' },
 } as const
 
+const BEGIN_MARKS = Object.keys(FORMULA_MARKERS) as (keyof typeof FORMULA_MARKERS)[]
 type MarkBegin = typeof BEGIN_MARKS[number]
-type MarkEnd = typeof END_MARKS[number]
-
-const CHARACTER_MAP = {
-  ' ': 'WHITESPACE',
-  '\t': 'WHITESPACE',
-  '\\': 'BACKSLASH',
-  'f': 'f',
-  '$': '$',
-  '(': '(',
-  ')': ')',
-  '[': '[',
-  ']': ']',
-  '{': '{',
-  '}': '}',
-  '*': '*',
-} as Record<string, string>
 
 function alert() {
   console.error('Unexpected character or sequence in docstring parsing.')
 }
 
-// ON \in { CHARACTER, LINE_INCREMENT, TRIPLE_SLASH, BLOCK_START, BLOCK_END, EOF }
-
 const SeekDoc = {
+  entry: assign(() => ({
+    range: [],
+    start: undefined,
+    mark: undefined,
+  })),
   on: {
     TRIPLE_SLASH: 'InTripleSlashDoc',
     BLOCK_START: 'InBlockDoc',
@@ -59,7 +44,7 @@ const FormulaStatus = {
         CHARACTER: [
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'BACKSLASH'
+              return params.event.char === '\\'
             },
             target: 'ReadyStartBackSlash',
           },
@@ -75,20 +60,20 @@ const FormulaStatus = {
         CHARACTER: [
           {
             guard: (parmas: any) => {
-              return CHARACTER_MAP[parmas.event.char] === 'BACKSLASH'
+              return parmas.event.char === '\\'
             },
             target: 'ReadyStartBackSlash',
           },
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'f'
+              return params.event.char === 'f'
             },
             target: 'ReadyStartMark',
-            actions: assign({ end: undefined }),
+            actions: assign({ mark: undefined }),
           },
           {
             target: 'Outside',
-            actions: assign({ end: undefined }),
+            actions: assign({ mark: undefined }),
           },
         ],
         LINE_INCREMENT: 'Outside',
@@ -102,21 +87,20 @@ const FormulaStatus = {
               return BEGIN_MARKS.includes(params.event.char as MarkBegin)
             },
             target: 'Inside',
-            actions: assign({
-              end: (params: any) => {
-                return MARKS_MAP[params.event.char as MarkBegin] as MarkEnd
-              },
-            }),
+            actions: assign((params: any) => ({
+              mark: FORMULA_MARKERS[params.event.char as MarkBegin],
+              start: params.event.pos - 2, // -1 for f and -1 for backslash
+            })),
           },
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'BACKSLASH'
+              return params.event.char === '\\'
             },
             target: 'ReadyStartBackSlash',
           },
           {
             target: 'Outside',
-            actions: assign({ end: undefined }),
+            actions: assign({ mark: undefined }),
           },
         ],
         LINE_INCREMENT: 'Outside',
@@ -127,7 +111,7 @@ const FormulaStatus = {
         CHARACTER: [
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'BACKSLASH'
+              return params.event.char === '\\'
             },
             target: 'ReadyEndBackSlash',
           },
@@ -135,7 +119,20 @@ const FormulaStatus = {
             target: 'Inside',
           },
         ],
-        LINE_INCREMENT: 'Inside',
+        LINE_INCREMENT: {
+          target: 'Inside',
+          actions: assign((params: any) => {
+            return {
+              ranges: params.context.ranges.concat(new Range(
+                params.event.line,
+                params.context.start,
+                params.event.line,
+                params.event.pos,
+              )),
+              start: undefined,
+            }
+            }),
+        },
       },
     },
     ReadyEndBackSlash: {
@@ -143,13 +140,13 @@ const FormulaStatus = {
         CHARACTER: [
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'BACKSLASH'
+              return params.event.char === '\\'
             },
             target: 'ReadyEndBackSlash',
           },
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'f'
+              return params.event.char === 'f'
             },
             target: 'ReadyEndMark',
           },
@@ -165,14 +162,27 @@ const FormulaStatus = {
         CHARACTER: [
           {
             guard: (params: any) => {
-              return params.event.char === params.context.end
+              return params.event.char === params.context.mark.end
             },
             target: 'Outside',
-            actions: assign({ end: undefined }),
+            actions: assign((params: any) => ({
+              result: params.context.result.concat({
+                ranges: params.context.ranges.concat(new Range(
+                  params.event.line,
+                  params.context.start,
+                  params.event.line,
+                  params.event.pos,
+                )),
+                type: params.context.mark.start,
+              }),
+              ranges: [],
+              mark: undefined,
+              start: undefined,
+            })),
           },
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'BACKSLASH'
+              return params.event.char === '\\'
             },
             target: 'ReadyEndBackSlash',
           },
@@ -200,11 +210,20 @@ const LineStatus = {
     },
     AwatingTripleSlash: {
       on: {
-        TRIPLE_SLASH: 'FoundTripleSlash',
+        TRIPLE_SLASH: {
+          target: 'FoundTripleSlash',
+          actions: assign((params: any) => {
+            if (params.self.getSnapshot().matches({ InTripleSlashDoc: { FormulaStatus: 'Inside' } })) {
+              return {
+                start: params.event.pos + 3,  // +3 for the '///'
+              }
+            }
+          })
+        },
         CHARACTER: [
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'WHITESPACE'
+              return params.event.char === ' ' || params.event.char === '\t'
             },
           },
           {
@@ -255,18 +274,32 @@ const StarStatus = {
         CHARACTER: [
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === 'WHITESPACE'
+              return params.event.char === ' ' || params.event.char === '\t'
             },
             target: 'Wait',
           },
           {
             guard: (params: any) => {
-              return CHARACTER_MAP[params.event.char] === '*'
+              return params.event.char === '*'
             },
             target: 'Met',
+            actions: assign((params: any) => {
+              if (params.self.getSnapshot().matches({ InBlockDoc: { FormulaStatus: 'Inside' } })) {
+                return {
+                  start: params.event.pos + 1,  // +1 for the '*'
+                }
+              }
+            })
           },
           {
             target: 'No',
+            actions: assign((params: any) => {
+              if (params.self.getSnapshot().matches({ InBlockDoc: { FormulaStatus: 'Inside' } })) {
+                return {
+                  start: params.event.pos,
+                }
+              }
+            }),
           },
         ],
         LINE_INCREMENT: 'Wait',
@@ -303,10 +336,22 @@ const Done = {
   type: 'final' as const,
 }
 
+interface MachineContext {
+  result: DocumentFormulaContext[]
+  ranges: Range[]
+  start?: number
+  mark?: MarkBegin
+}
+
 export const StateMachine = createMachine({
   id: 'docstring-c/c++',
   initial: 'SeekDoc',
-  context: { end: undefined } as any,
+  context: {
+    result: [],
+    ranges: [],
+    start: undefined,
+    mark: undefined,
+  } as any,
   states: {
     SeekDoc,
     InTripleSlashDoc,
@@ -315,11 +360,10 @@ export const StateMachine = createMachine({
   },
 })
 
-type TextmateTokens = Awaited<ReturnType<Awaited<ReturnType<typeof useTokenService>>['fetch']>>
+type TextmateToken = Awaited<ReturnType<Awaited<ReturnType<typeof useTokenService>>['fetch']>>[number]
 interface DocumentFormulaContext {
   ranges: Range[]
-  tex: string
-  type: '$$' | '()' | '[]' | '{}'
+  type: MarkBegin
 }
 
 const supportedLangs = ['c', 'cpp'] as const
@@ -331,29 +375,37 @@ const KEY_SCOPES = Object.fromEntries(supportedLangs.map((lang) => [lang, {
   BLOCK_END: `punctuation.definition.comment.end.documentation.${lang}`,
 }])) as Record<SupportedLang, Record<KeyScope, string>>
 
-export function parse(tokens: TextmateTokens, lang: SupportedLang): DocumentFormulaContext[] {
+export function parse(tokens: TextmateToken[], lang: SupportedLang): DocumentFormulaContext[] {
   const StateActor = createActor(StateMachine)
   StateActor.start()
-  let scope: KeyScope | undefined
-  let line: number | undefined
+  let line: number = 0
+  let pos: number, char: string
+  let prev: TextmateToken | undefined
   const scopes = Object.entries(KEY_SCOPES[lang]) as [KeyScope, string][]
   tokens.forEach((token) => {
+    if (token.line !== line) {
+      StateActor.send({
+        type: 'LINE_INCREMENT',
+        line: line, // previous line
+        pos: (prev?.startIndex ?? 0) + (prev?.text.length ?? 0),
+      })
+      line = token.line
+    }
+    prev = token
     for (const [key, value] of scopes) {
-      if (token.scopes.includes(value) && scope !== key) {
-        scope = key
-        StateActor.send({ type: key })
+      if (token.scopes.includes(value)) {
+        pos = token.startIndex
+        StateActor.send({ type: key, pos })
         return
       }
     }
-    if (token.line !== line) {
-      line = token.line
-      StateActor.send({ type: 'LINE_INCREMENT' })
-    }
-    for (const char of token.text) {
-      StateActor.send({ type: 'CHARACTER', char })
+    for (let i = 0; i < token.text.length; i++) {
+      pos = token.startIndex + i
+      char = token.text[i]
+      StateActor.send({ type: 'CHARACTER', char, pos, line })
     }
   })
   StateActor.send({ type: 'EOF' })
   StateActor.stop()
-  return []
+  return StateActor.getSnapshot().context.result
 }
