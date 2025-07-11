@@ -1,37 +1,45 @@
-import { Range } from 'vscode'
+import type { useTokenService } from 'mathjax-intellisense-tools'
+import { isTruthy } from 'mathjax-intellisense-tools'
+import { Range, window } from 'vscode'
 import { assign, createActor, createMachine, raise } from 'xstate'
-import { useTokenService } from 'mathjax-intellisense-tools'
+import { doc } from './store/shared'
 
 // https://www.doxygen.nl/manual/formulas.html
 
+interface MarkInfo {
+  name: string
+  start: string
+  end: string
+  sep: string
+}
+
 export const FORMULA_MARKERS = {
-  '$': { name: '$$', start: '$', end: '$' },
-  '(': { name: '()', start: '(', end: ')' },
-  '[': { name: '[]', start: '[', end: ']' },
-  '{': { name: '{}', start: '{', end: '}' },
-} as const
+  '$': { name: '$$', start: '$', end: '$', sep: '' },
+  '(': { name: '()', start: '(', end: ')', sep: '' },
+  '[': { name: '[]', start: '[', end: ']', sep: '\n' },
+  '{': { name: '{}', start: '{', end: '}', sep: '\n' },
+}
 
 const BEGIN_MARKS = Object.keys(FORMULA_MARKERS) as (keyof typeof FORMULA_MARKERS)[]
 type MarkBegin = typeof BEGIN_MARKS[number]
 
-function alert() {
-  console.error('Unexpected character or sequence in docstring parsing.')
-}
-
 const SeekDoc = {
-  entry: assign(() => ({
+  entry: assign(params => ({
+    result: params.context.result,
     range: [],
     start: undefined,
     mark: undefined,
   })),
   on: {
-    TRIPLE_SLASH: 'InTripleSlashDoc',
-    BLOCK_START: 'InBlockDoc',
     CHARACTER: 'SeekDoc',
     LINE_INCREMENT: 'SeekDoc',
+    TRIPLE_SLASH: 'InTripleSlashDoc',
+    BLOCK_START: 'InBlockDoc',
     EOF: 'Done',
     BLOCK_END: {
-      actions: alert,
+      actions: () => window.showErrorMessage(
+        'Unexpected `BLOCK_END` when `SeekDoc` state.',
+      ),
     },
   },
 }
@@ -52,7 +60,6 @@ const FormulaStatus = {
             target: 'Outside',
           },
         ],
-        LINE_INCREMENT: 'Outside',
       },
     },
     ReadyStartBackSlash: {
@@ -69,11 +76,9 @@ const FormulaStatus = {
               return params.event.char === 'f'
             },
             target: 'ReadyStartMark',
-            actions: assign({ mark: undefined }),
           },
           {
             target: 'Outside',
-            actions: assign({ mark: undefined }),
           },
         ],
         LINE_INCREMENT: 'Outside',
@@ -84,12 +89,13 @@ const FormulaStatus = {
         CHARACTER: [
           {
             guard: (params: any) => {
-              return BEGIN_MARKS.includes(params.event.char as MarkBegin)
+              return BEGIN_MARKS.includes(params.event.char)
             },
             target: 'Inside',
             actions: assign((params: any) => ({
+              ranges: [],
               mark: FORMULA_MARKERS[params.event.char as MarkBegin],
-              start: params.event.pos - 2, // -1 for f and -1 for backslash
+              start: params.event.pos - 2, // `/f`
             })),
           },
           {
@@ -100,7 +106,6 @@ const FormulaStatus = {
           },
           {
             target: 'Outside',
-            actions: assign({ mark: undefined }),
           },
         ],
         LINE_INCREMENT: 'Outside',
@@ -127,11 +132,11 @@ const FormulaStatus = {
                 params.event.line,
                 params.context.start,
                 params.event.line,
-                params.event.pos,
+                params.event.pos + 1,
               )),
               start: undefined,
             }
-            }),
+          }),
         },
       },
     },
@@ -171,11 +176,11 @@ const FormulaStatus = {
                   params.event.line,
                   params.context.start,
                   params.event.line,
-                  params.event.pos,
+                  params.event.pos + 1,
                 )),
-                type: params.context.mark.start,
+                mark: params.context.mark,
               }),
-              ranges: [],
+              ranges: undefined,
               mark: undefined,
               start: undefined,
             })),
@@ -197,29 +202,11 @@ const FormulaStatus = {
 }
 
 const LineStatus = {
-  initial: 'FoundTripleSlash',
+  initial: 'Start',
   states: {
-    FoundTripleSlash: {
+    Wait: {
       on: {
-        LINE_INCREMENT: 'AwatingTripleSlash',
-        CHARACTER: 'FoundTripleSlash',
-        TRIPLE_SLASH: { actions: alert },
-        BLOCK_START: { actions: alert },
-        BLOCK_END: { actions: alert },
-      },
-    },
-    AwatingTripleSlash: {
-      on: {
-        TRIPLE_SLASH: {
-          target: 'FoundTripleSlash',
-          actions: assign((params: any) => {
-            if (params.self.getSnapshot().matches({ InTripleSlashDoc: { FormulaStatus: 'Inside' } })) {
-              return {
-                start: params.event.pos + 3,  // +3 for the '///'
-              }
-            }
-          })
-        },
+        TRIPLE_SLASH: 'Met',
         CHARACTER: [
           {
             guard: (params: any) => {
@@ -227,18 +214,37 @@ const LineStatus = {
             },
           },
           {
-            actions: raise({ type: 'TO_SEEK_DOC' }),
+            actions: raise({ type: 'TRIPLE_SLASH_DOC_END' }),
           },
         ],
         LINE_INCREMENT: {
-          actions: raise({ type: 'TO_SEEK_DOC' }),
+          actions: raise({ type: 'TRIPLE_SLASH_DOC_END' }),
         },
-        BLOCK_START: {
-          actions: raise({ type: 'TO_IN_BLOCK_DOC' }),
+      },
+    },
+    Met: {
+      on: {
+        CHARACTER: {
+          target: 'Start',
+          actions: assign((params: any) => {
+            if (params.self.getSnapshot().matches({
+              InTripleSlashDoc: {
+                FormulaStatus: 'Inside',
+              },
+            })) {
+              return {
+                start: params.event.pos + +(params.event.char === ' '),
+              }
+            }
+          }),
         },
-        BLOCK_END: {
-          actions: alert,
-        },
+        LINE_INCREMENT: 'Wait',
+      },
+    },
+    Start: {
+      on: {
+        CHARACTER: 'Start',
+        LINE_INCREMENT: 'Wait',
       },
     },
   },
@@ -247,22 +253,24 @@ const LineStatus = {
 const InTripleSlashDoc = {
   type: 'parallel' as const,
   states: {
-    LineStatus,
+    LineStatus: LineStatus,
     FormulaStatus,
   },
   on: {
     EOF: 'Done',
     LINE_INCREMENT: {
       guard: (params: any) => {
-        return params.state.matches({ LineStatus: 'AwatingTripleSlash' })
+        return params.state.matches({ LineStatus: 'Wait' })
       },
       target: 'SeekDoc',
     },
-    BLOCK_END: { actions: alert },
-    BLOCK_START: { actions: alert },
-    TRIPLE_SLASH: { actions: alert },
-    TO_SEEK_DOC: 'SeekDoc',
-    TO_IN_BLOCK_DOC: 'InBlockDoc',
+    BLOCK_START: 'InBlockDoc',
+    BLOCK_END: {
+      actions: () => window.showErrorMessage(
+        'Unexpected `BLOCK_END` when `InTripleSlashDoc` state.',
+      ),
+    },
+    TRIPLE_SLASH_DOC_END: 'SeekDoc',
   },
 }
 
@@ -279,24 +287,15 @@ const StarStatus = {
             target: 'Wait',
           },
           {
-            guard: (params: any) => {
-              return params.event.char === '*'
-            },
             target: 'Met',
             actions: assign((params: any) => {
-              if (params.self.getSnapshot().matches({ InBlockDoc: { FormulaStatus: 'Inside' } })) {
+              if (params.self.getSnapshot().matches({
+                InBlockDoc: {
+                  FormulaStatus: 'Inside',
+                },
+              })) {
                 return {
-                  start: params.event.pos + 1,  // +1 for the '*'
-                }
-              }
-            })
-          },
-          {
-            target: 'No',
-            actions: assign((params: any) => {
-              if (params.self.getSnapshot().matches({ InBlockDoc: { FormulaStatus: 'Inside' } })) {
-                return {
-                  start: params.event.pos,
+                  start: params.event.pos + +(params.event.char === '*'),
                 }
               }
             }),
@@ -307,14 +306,27 @@ const StarStatus = {
     },
     Met: {
       on: {
+        CHARACTER: {
+          target: 'Start',
+          actions: assign((params: any) => {
+            if (params.self.getSnapshot().matches({
+              InBlockDoc: {
+                FormulaStatus: 'Inside',
+              },
+            })) {
+              return {
+                start: params.event.pos + +(params.event.char === ' '),
+              }
+            }
+          }),
+        },
         LINE_INCREMENT: 'Wait',
-        CHARACTER: 'Met',
       },
     },
-    No: {
+    Start: {
       on: {
+        CHARACTER: 'Start',
         LINE_INCREMENT: 'Wait',
-        CHARACTER: 'No',
       },
     },
   },
@@ -323,12 +335,22 @@ const StarStatus = {
 const InBlockDoc = {
   type: 'parallel' as const,
   states: {
-    StarStatus,
+    StarStatus: StarStatus,
     FormulaStatus,
   },
   on: {
     EOF: 'Done',
+    BLOCK_START: {
+      actions: () => window.showErrorMessage(
+        'Unexpected `BLOCK_START` when `InBlockDoc` state.',
+      ),
+    },
     BLOCK_END: 'SeekDoc',
+    TRIPLE_SLASH: {
+      actions: () => window.showErrorMessage(
+        'Unexpected `TRIPLE_SLASH` when `InBlockDoc` state.',
+      ),
+    },
   },
 }
 
@@ -336,19 +358,12 @@ const Done = {
   type: 'final' as const,
 }
 
-interface MachineContext {
-  result: DocumentFormulaContext[]
-  ranges: Range[]
-  start?: number
-  mark?: MarkBegin
-}
-
 export const StateMachine = createMachine({
   id: 'docstring-c/c++',
   initial: 'SeekDoc',
   context: {
     result: [],
-    ranges: [],
+    ranges: undefined,
     start: undefined,
     mark: undefined,
   } as any,
@@ -363,13 +378,13 @@ export const StateMachine = createMachine({
 type TextmateToken = Awaited<ReturnType<Awaited<ReturnType<typeof useTokenService>>['fetch']>>[number]
 interface DocumentFormulaContext {
   ranges: Range[]
-  type: MarkBegin
+  mark: MarkInfo
 }
 
 const supportedLangs = ['c', 'cpp'] as const
 type SupportedLang = typeof supportedLangs[number]
 type KeyScope = 'TRIPLE_SLASH' | 'BLOCK_START' | 'BLOCK_END'
-const KEY_SCOPES = Object.fromEntries(supportedLangs.map((lang) => [lang, {
+const KEY_SCOPES = Object.fromEntries(supportedLangs.map(lang => [lang, {
   TRIPLE_SLASH: `punctuation.definition.comment.documentation.${lang}`,
   BLOCK_START: `punctuation.definition.comment.begin.documentation.${lang}`,
   BLOCK_END: `punctuation.definition.comment.end.documentation.${lang}`,
@@ -386,7 +401,7 @@ export function parse(tokens: TextmateToken[], lang: SupportedLang): DocumentFor
     if (token.line !== line) {
       StateActor.send({
         type: 'LINE_INCREMENT',
-        line: line, // previous line
+        line, // previous line
         pos: (prev?.startIndex ?? 0) + (prev?.text.length ?? 0),
       })
       line = token.line
@@ -408,4 +423,30 @@ export function parse(tokens: TextmateToken[], lang: SupportedLang): DocumentFor
   StateActor.send({ type: 'EOF' })
   StateActor.stop()
   return StateActor.getSnapshot().context.result
+}
+
+interface FormulaRenderInfo {
+  ranges: Range[]
+  tex: string
+}
+
+export function prerender(formulas: DocumentFormulaContext[]): FormulaRenderInfo[] {
+  if (!doc.value)
+    return []
+  return formulas.map((formula) => {
+    let tex = formula.ranges.map(
+      range => doc.value!.getText(range),
+    ).join(formula.mark.sep).trim().slice(3, -3)
+    if (formula.mark.name === '{}') {
+      const idx = tex.indexOf('}{')
+      if (idx === -1)
+        return undefined
+      const env = tex.slice(0, idx)
+      tex = `\\begin{${env}}${tex.slice(idx + 2)}\\end{${env}}`
+    }
+    return {
+      ranges: formula.ranges,
+      tex,
+    }
+  }).filter(isTruthy)
 }
