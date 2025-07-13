@@ -10,7 +10,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/howcasperwhat/mathjax-intellisense.git",
-    "directory": "extensions/mathjax-intellisense-cpp"
+    "directory": "extensions/mathjax-intellisense-ccpp"
   },
   "bugs": "https://github.com/howcasperwhat/mathjax-intellisense/issues",
   "categories": [
@@ -22,6 +22,7 @@
     "vscode": "^1.84.0"
   },
   "activationEvents": [
+    "onLanguage:c",
     "onLanguage:cpp"
   ],
   "contributes": {

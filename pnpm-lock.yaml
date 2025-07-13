@@ -85,7 +85,7 @@ importers:
         specifier: catalog:vscode
         version: 1.1.0
 
-  extensions/mathjax-intellisense-cpp:
+  extensions/mathjax-intellisense-ccpp:
     dependencies:
       mathjax-intellisense-tools:
         specifier: workspace:*
