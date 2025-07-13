@@ -1,6 +1,6 @@
 {
   "publisher": "howcasperwhat",
-  "name": "mathjax-intellisense-cpp",
+  "name": "mathjax-intellisense-ccpp",
   "displayName": "MathJax Intellisense for C/C++",
   "version": "0.0.0",
   "preview": true,
@@ -24,7 +24,47 @@
   "activationEvents": [
     "onLanguage:cpp"
   ],
-  "contributes": {},
+  "contributes": {
+    "configuration": {
+      "title": "mathjax-intellisense-ccpp",
+      "properties": {
+        "mathjax-intellisense-ccpp.color": {
+          "type": "string",
+          "default": "auto",
+          "description": "Color of rendered formulas."
+        },
+        "mathjax-intellisense-ccpp.interval": {
+          "type": "number",
+          "default": 200,
+          "minimum": 100,
+          "description": "Formula update interval(ms)."
+        },
+        "mathjax-intellisense-ccpp.code": {
+          "type": "string",
+          "default": "font-weight: bold;",
+          "description": "Style of matched LaTeX code."
+        },
+        "mathjax-intellisense-ccpp.preview": {
+          "type": "string",
+          "default": "",
+          "description": "Style of the inline formula preview."
+        },
+        "mathjax-intellisense-ccpp.scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Scale factor of the preview formula."
+        },
+        "mathjax-intellisense-ccpp.preload": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Paths to files containing LaTeX preamble to preload."
+        }
+      }
+    }
+  },
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "dev": "pnpm run build -- --watch",
@@ -35,7 +75,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
-    "mathjax-tools": "workspace:*"
+    "mathjax-intellisense-tools": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:types",
@@ -46,6 +86,7 @@
     "reactive-vscode": "catalog:vscode",
     "typescript": "catalog:bundling",
     "vscode-ext-gen": "catalog:vscode",
+    "vscode-textmate-languageservice": "catalog:deps",
     "xstate": "catalog:deps"
   }
 }

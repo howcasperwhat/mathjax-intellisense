@@ -50,8 +50,8 @@ catalogs:
       specifier: ^3.6.0
       version: 3.6.0
     reactive-vscode:
-      specifier: ^0.2.13
-      version: 0.2.22
+      specifier: ^0.3.1
+      version: 0.3.1
     vscode-ext-gen:
       specifier: ^1.0.0
       version: 1.1.0
@@ -87,9 +87,9 @@ importers:
 
   extensions/mathjax-intellisense-cpp:
     dependencies:
-      mathjax-tools:
+      mathjax-intellisense-tools:
         specifier: workspace:*
-        version: link:../../packages/mathjax-tools
+        version: link:../../packages/mathjax-intellisense-tools
     devDependencies:
       '@types/node':
         specifier: catalog:types
@@ -108,22 +108,25 @@ importers:
         version: 2.0.3
       reactive-vscode:
         specifier: catalog:vscode
-        version: 0.2.22(@types/vscode@1.101.0)
+        version: 0.3.1(@types/vscode@1.101.0)
       typescript:
         specifier: catalog:bundling
         version: 5.8.3
       vscode-ext-gen:
         specifier: catalog:vscode
         version: 1.1.0
+      vscode-textmate-languageservice:
+        specifier: catalog:deps
+        version: 4.0.0
       xstate:
         specifier: catalog:deps
         version: 5.20.1
 
   extensions/mathjax-intellisense-python:
     dependencies:
-      mathjax-tools:
+      mathjax-intellisense-tools:
         specifier: workspace:*
-        version: link:../../packages/mathjax-tools
+        version: link:../../packages/mathjax-intellisense-tools
     devDependencies:
       '@types/node':
         specifier: catalog:types
@@ -145,7 +148,7 @@ importers:
         version: 2.0.3
       reactive-vscode:
         specifier: catalog:vscode
-        version: 0.2.22(@types/vscode@1.101.0)
+        version: 0.3.1(@types/vscode@1.101.0)
       typescript:
         specifier: catalog:bundling
         version: 5.8.3
@@ -156,14 +159,11 @@ importers:
         specifier: catalog:deps
         version: 5.20.1
 
-  packages/mathjax-tools:
+  packages/mathjax-intellisense-tools:
     devDependencies:
       mathjax-full:
         specifier: catalog:deps
         version: 3.2.2
-      vscode-textmate-languageservice:
-        specifier: catalog:deps
-        version: 4.0.0
 
 packages:
 
@@ -588,8 +588,8 @@ packages:
     resolution: {integrity: sha512-YLT9Zo3oNPJoBjBc4q8G2mjU4tqIbf5CEOORbUUr48dCD9q3umJ3IPlVqOqDakPfd2HuwccBaqlGhN4Gmr5OWg==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@reactive-vscode/reactivity@0.2.22':
-    resolution: {integrity: sha512-+ltivl/R1c4vapZsRrejNQVyeQICayQ39wn0l/VjFqVcCs8ADVpNo4j53feMcM8oEbJv0StvVcODIyRFfqTGsg==}
+  '@reactive-vscode/reactivity@0.3.1':
+    resolution: {integrity: sha512-9Q8ThxVPo5qm78OQeZSOGd8ZtW4xi9O5TCCvzhx8sjcS42AsIsIvyAtIvbZyiWbcTmARuxWY8ejahCSF/Murvg==}
 
   '@rollup/rollup-android-arm-eabi@4.44.1':
     resolution: {integrity: sha512-JAcBr1+fgqx20m7Fwe1DxPUl/hPkee6jA6Pl7n1v2EFiktAHenTaXl5aIFjUIEsfn9w3HE4gK1lEgNGMzBDs1w==}
@@ -2386,10 +2386,10 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  reactive-vscode@0.2.22:
-    resolution: {integrity: sha512-bJq3AkoKt157CIw5Bz8Jp71dhSEG4M6O1Txjx5BLj97O+D1lQ7XghOGGngFWLTnWX4BwXxzYV7MvQmzNLqPuOg==}
+  reactive-vscode@0.3.1:
+    resolution: {integrity: sha512-uTMKdAHa9/Ax95VbswZsIOXH3k8fb45BKkLxU5RHaXOFbpudHlA9tecXQpKqPGkuyGFGZyPrjLBIGNBvB/qOYg==}
     peerDependencies:
-      '@types/vscode': ^1.99.1
+      '@types/vscode': ^1.101.0
 
   read-pkg@8.1.0:
     resolution: {integrity: sha512-PORM8AgzXeskHO/WEv312k9U03B8K9JSiWF/8N9sUuFjBa+9SF2u6K7VClzXwDXab51jCd8Nd36CNM+zR97ScQ==}
@@ -3302,7 +3302,7 @@ snapshots:
 
   '@pkgr/core@0.2.7': {}
 
-  '@reactive-vscode/reactivity@0.2.22': {}
+  '@reactive-vscode/reactivity@0.3.1': {}
 
   '@rollup/rollup-android-arm-eabi@4.44.1':
     optional: true
@@ -5432,9 +5432,9 @@ snapshots:
       strip-json-comments: 2.0.1
     optional: true
 
-  reactive-vscode@0.2.22(@types/vscode@1.101.0):
+  reactive-vscode@0.3.1(@types/vscode@1.101.0):
     dependencies:
-      '@reactive-vscode/reactivity': 0.2.22
+      '@reactive-vscode/reactivity': 0.3.1
       '@types/vscode': 1.101.0
 
   read-pkg@8.1.0:

@@ -1,6 +1,6 @@
 import { resolve as _resolve, isAbsolute, join } from 'pathe'
 import { workspace } from 'vscode'
-import { MATHJAX_TEX_EX } from '../store/constant'
+import { MATHJAX_TEX_EX } from './store/constant'
 
 export function debounce<T extends (...args: any[]) => any>(
   fn: T,

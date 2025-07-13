@@ -1,0 +1,47 @@
+{
+  "name": "mathjax-intellisense-tools",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tools for MathJax Intellisense.",
+  "author": "Casper Huang <casper.w.huang@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/howcasperwhat/mathjax-intellisense#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howcasperwhat/mathjax-intellisense.git",
+    "directory": "packages/mathjax-tools"
+  },
+  "bugs": "https://github.com/howcasperwhat/mathjax-intellisense/issues",
+  "keywords": [],
+  "exports": {
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.cjs"
+    },
+    "./transformer": {
+      "types": "./dist/transformer/index.d.ts",
+      "import": "./dist/transformer/index.js",
+      "require": "./dist/transformer/index.cjs"
+    },
+    "./constant": {
+      "types": "./dist/constant/index.d.ts",
+      "import": "./dist/constant/index.js",
+      "require": "./dist/constant/index.cjs"
+    },
+    "./mathjax": {
+      "types": "./dist/mathjax/index.d.ts",
+      "import": "./dist/mathjax/index.js",
+      "require": "./dist/mathjax/index.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "pnpm run build -- --watch",
+    "build": "tsup"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mathjax-full": "catalog:deps"
+  }
+}

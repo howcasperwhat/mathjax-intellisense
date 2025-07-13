@@ -1,8 +1,9 @@
-import type { useTokenService } from 'mathjax-intellisense-tools'
-import { isTruthy } from 'mathjax-intellisense-tools'
+import type { TextmateToken } from 'vscode-textmate-languageservice'
+import type { SharedFormulaInfo } from './types'
+import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { Range, window } from 'vscode'
 import { assign, createActor, createMachine, raise } from 'xstate'
-import { doc } from './store/shared'
+import { color, config, doc } from './store/shared'
 
 // https://www.doxygen.nl/manual/formulas.html
 
@@ -253,7 +254,7 @@ const LineStatus = {
 const InTripleSlashDoc = {
   type: 'parallel' as const,
   states: {
-    LineStatus: LineStatus,
+    LineStatus,
     FormulaStatus,
   },
   on: {
@@ -335,7 +336,7 @@ const StarStatus = {
 const InBlockDoc = {
   type: 'parallel' as const,
   states: {
-    StarStatus: StarStatus,
+    StarStatus,
     FormulaStatus,
   },
   on: {
@@ -375,8 +376,7 @@ export const StateMachine = createMachine({
   },
 })
 
-type TextmateToken = Awaited<ReturnType<Awaited<ReturnType<typeof useTokenService>>['fetch']>>[number]
-interface DocumentFormulaContext {
+export interface DocumentFormulaContext {
   ranges: Range[]
   mark: MarkInfo
 }
@@ -390,7 +390,7 @@ const KEY_SCOPES = Object.fromEntries(supportedLangs.map(lang => [lang, {
   BLOCK_END: `punctuation.definition.comment.end.documentation.${lang}`,
 }])) as Record<SupportedLang, Record<KeyScope, string>>
 
-export function parse(tokens: TextmateToken[], lang: SupportedLang): DocumentFormulaContext[] {
+export async function parse(tokens: TextmateToken[], lang: SupportedLang): Promise<DocumentFormulaContext[]> {
   const StateActor = createActor(StateMachine)
   StateActor.start()
   let line: number = 0
@@ -425,28 +425,42 @@ export function parse(tokens: TextmateToken[], lang: SupportedLang): DocumentFor
   return StateActor.getSnapshot().context.result
 }
 
-interface FormulaRenderInfo {
-  ranges: Range[]
-  tex: string
-}
-
-export function prerender(formulas: DocumentFormulaContext[]): FormulaRenderInfo[] {
+export function render(formulas: DocumentFormulaContext[]): SharedFormulaInfo[] {
   if (!doc.value)
     return []
-  return formulas.map((formula) => {
-    let tex = formula.ranges.map(
-      range => doc.value!.getText(range),
-    ).join(formula.mark.sep).trim().slice(3, -3)
-    if (formula.mark.name === '{}') {
+
+  const result: SharedFormulaInfo[] = []
+  for (const formula of formulas) {
+    const texes: string[] = []
+    const { ranges, mark } = formula
+
+    if (ranges.length === 0)
+      continue
+
+    let [depend, max] = [ranges[0], 0]
+    for (const range of ranges) {
+      const text = doc.value.getText(range)
+      if (text.length > max) {
+        max = text.length
+        depend = range
+      }
+      texes.push(text)
+    }
+
+    let tex = texes.join(mark.sep).trim().slice(3, -3)
+    if (mark.name === '{}') {
       const idx = tex.indexOf('}{')
       if (idx === -1)
-        return undefined
+        continue
       const env = tex.slice(0, idx)
       tex = `\\begin{${env}}${tex.slice(idx + 2)}\\end{${env}}`
     }
-    return {
-      ranges: formula.ranges,
-      tex,
-    }
-  }).filter(isTruthy)
+
+    const preview = transformer.from(tex, color.value, config.extension.scale)
+    const display = (ranges.at(0)!.start.line + ranges.at(-1)!.end.line) / 2
+
+    result.push({ ranges, preview, depend, display })
+  }
+
+  return result
 }

@@ -3,10 +3,10 @@
 
 // Meta info
 export const publisher = "howcasperwhat"
-export const name = "mathjax-intellisense-cpp"
+export const name = "mathjax-intellisense-ccpp"
 export const version = "0.0.0"
-export const displayName = "MathJax Intellisense for C++"
-export const description = "A VS Code extension that provides MathJax intellisense for C++."
+export const displayName = "MathJax Intellisense for C/C++"
+export const description = "A VS Code extension that provides MathJax intellisense for C/C++."
 export const extensionId = `${publisher}.${name}`
 
 /**
@@ -15,7 +15,7 @@ export const extensionId = `${publisher}.${name}`
 export type CommandKey = never
 
 /**
- * Commands map registed by `howcasperwhat.mathjax-intellisense-cpp`
+ * Commands map registed by `howcasperwhat.mathjax-intellisense-ccpp`
  */
 export const commands = {
 } satisfies Record<string, CommandKey>
@@ -23,15 +23,39 @@ export const commands = {
 /**
  * Type union of all configs
  */
-export type ConfigKey = never
+export type ConfigKey = 
+  | "mathjax-intellisense-ccpp.color"
+  | "mathjax-intellisense-ccpp.interval"
+  | "mathjax-intellisense-ccpp.code"
+  | "mathjax-intellisense-ccpp.preview"
+  | "mathjax-intellisense-ccpp.scale"
+  | "mathjax-intellisense-ccpp.preload"
 
 export interface ConfigKeyTypeMap {
+  "mathjax-intellisense-ccpp.color": string,
+  "mathjax-intellisense-ccpp.interval": number,
+  "mathjax-intellisense-ccpp.code": string,
+  "mathjax-intellisense-ccpp.preview": string,
+  "mathjax-intellisense-ccpp.scale": number,
+  "mathjax-intellisense-ccpp.preload": string[],
 }
 
 export interface ConfigShorthandMap {
+  color: "mathjax-intellisense-ccpp.color",
+  interval: "mathjax-intellisense-ccpp.interval",
+  code: "mathjax-intellisense-ccpp.code",
+  preview: "mathjax-intellisense-ccpp.preview",
+  scale: "mathjax-intellisense-ccpp.scale",
+  preload: "mathjax-intellisense-ccpp.preload",
 }
 
 export interface ConfigShorthandTypeMap {
+  color: string,
+  interval: number,
+  code: string,
+  preview: string,
+  scale: number,
+  preload: string[],
 }
 
 export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
@@ -41,23 +65,109 @@ export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
 
 
 /**
- * Configs map registered by `howcasperwhat.mathjax-intellisense-cpp`
+ * Configs map registered by `howcasperwhat.mathjax-intellisense-ccpp`
  */
 export const configs = {
+  /**
+   * Color of rendered formulas.
+   * @key `mathjax-intellisense-ccpp.color`
+   * @default `"auto"`
+   * @type `string`
+   */
+  color: {
+    key: "mathjax-intellisense-ccpp.color",
+    default: "auto",
+  } as ConfigItem<"mathjax-intellisense-ccpp.color">,
+  /**
+   * Formula update interval(ms).
+   * @key `mathjax-intellisense-ccpp.interval`
+   * @default `200`
+   * @type `number`
+   */
+  interval: {
+    key: "mathjax-intellisense-ccpp.interval",
+    default: 200,
+  } as ConfigItem<"mathjax-intellisense-ccpp.interval">,
+  /**
+   * Style of matched LaTeX code.
+   * @key `mathjax-intellisense-ccpp.code`
+   * @default `"font-weight: bold;"`
+   * @type `string`
+   */
+  code: {
+    key: "mathjax-intellisense-ccpp.code",
+    default: "font-weight: bold;",
+  } as ConfigItem<"mathjax-intellisense-ccpp.code">,
+  /**
+   * Style of the inline formula preview.
+   * @key `mathjax-intellisense-ccpp.preview`
+   * @default `""`
+   * @type `string`
+   */
+  preview: {
+    key: "mathjax-intellisense-ccpp.preview",
+    default: "",
+  } as ConfigItem<"mathjax-intellisense-ccpp.preview">,
+  /**
+   * Scale factor of the preview formula.
+   * @key `mathjax-intellisense-ccpp.scale`
+   * @default `1`
+   * @type `number`
+   */
+  scale: {
+    key: "mathjax-intellisense-ccpp.scale",
+    default: 1,
+  } as ConfigItem<"mathjax-intellisense-ccpp.scale">,
+  /**
+   * Paths to files containing LaTeX preamble to preload.
+   * @key `mathjax-intellisense-ccpp.preload`
+   * @default `[]`
+   * @type `array`
+   */
+  preload: {
+    key: "mathjax-intellisense-ccpp.preload",
+    default: [],
+  } as ConfigItem<"mathjax-intellisense-ccpp.preload">,
 }
 
 export interface ScopedConfigKeyTypeMap {
+  "color": string,
+  "interval": number,
+  "code": string,
+  "preview": string,
+  "scale": number,
+  "preload": string[],
 }
 
 export const scopedConfigs = {
-  scope: "mathjax-intellisense-cpp",
+  scope: "mathjax-intellisense-ccpp",
   defaults: {
+    "color": "auto",
+    "interval": 200,
+    "code": "font-weight: bold;",
+    "preview": "",
+    "scale": 1,
+    "preload": [],
   } satisfies ScopedConfigKeyTypeMap,
 }
 
 export interface NestedConfigs {
+  "mathjax-intellisense-ccpp": {
+    "color": string,
+    "interval": number,
+    "code": string,
+    "preview": string,
+    "scale": number,
+    "preload": string[],
+  },
 }
 
 export interface NestedScopedConfigs {
+  "color": string,
+  "interval": number,
+  "code": string,
+  "preview": string,
+  "scale": number,
+  "preload": string[],
 }
 
