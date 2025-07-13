@@ -1,9 +1,10 @@
+import type { TextLine } from 'vscode'
 import type { TextmateToken } from 'vscode-textmate-languageservice'
 import type { SharedFormulaInfo } from './types'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
-import { Range, TextLine, window } from 'vscode'
+import { Range, window } from 'vscode'
 import { assign, createActor, createMachine, raise } from 'xstate'
-import { color, config, doc, lineHeight, scale } from './store/shared'
+import { color, doc, lineHeight, scale } from './store/shared'
 
 // https://www.doxygen.nl/manual/formulas.html
 

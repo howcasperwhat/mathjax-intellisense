@@ -1,8 +1,8 @@
-import { DecorationRenderOptions, ExtensionContext, Position, Uri } from 'vscode'
+import type { DecorationRenderOptions, ExtensionContext } from 'vscode'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { debounce } from 'mathjax-intellisense-tools/utils'
 import { computed, useActiveEditorDecorations, watch } from 'reactive-vscode'
-import { window, workspace } from 'vscode'
+import { Uri, window, workspace } from 'vscode'
 import { parse, render } from './parser'
 import { setupWatcher } from './preload'
 import { config, doc, formulas, lang, preloads, selections } from './store/shared'
@@ -35,7 +35,7 @@ export async function useAnnotation(context: ExtensionContext) {
 
   useActiveEditorDecorations(MultiplePreviewOptions, () =>
     formulas.value.map(({ ranges, preview, depend, display }) => {
-      if (ranges.length > 2)
+      if (ranges.length > 2) {
         return {
           range: depend,
           renderOptions: {
@@ -45,7 +45,8 @@ export async function useAnnotation(context: ExtensionContext) {
             },
           },
         }
-      else
+      }
+      else {
         return {
           range: ranges[0],
           renderOptions: {
@@ -55,24 +56,19 @@ export async function useAnnotation(context: ExtensionContext) {
             },
           },
         }
-    }),
-    { updateOn: ['effect'] },
-  )
+      }
+    }), { updateOn: ['effect'] })
   useActiveEditorDecorations(ShowCodeOptions, () => {
-      return formulas.value
-        .flatMap(({ ranges }) => ranges)
-        .map((range) => ({ range }))
-    },
-    { updateOn: ['effect'] }
-  )
+    return formulas.value
+      .flatMap(({ ranges }) => ranges)
+      .map(range => ({ range }))
+  }, { updateOn: ['effect'] })
   useActiveEditorDecorations(HideCodeOptions, () =>
     formulas.value.filter(({ ranges }) =>
       ranges.every(range => selections.value.some(
-        selections => !selections.intersection(range)
-      ))
-    ).flatMap(({ ranges }) => ranges),
-    { updateOn: ['effect'] }
-  )
+        selections => !selections.intersection(range),
+      )),
+    ).flatMap(({ ranges }) => ranges), { updateOn: ['effect'] })
 
   const update = async () => {
     if (!lang.value)
@@ -80,8 +76,6 @@ export async function useAnnotation(context: ExtensionContext) {
 
     const tokens = await services[lang.value].fetch(doc.value!)
     formulas.value = render(await parse(tokens, lang.value))
-
-    console.log(formulas.value)
   }
   const trigger = debounce(update, config.extension.interval)
 
