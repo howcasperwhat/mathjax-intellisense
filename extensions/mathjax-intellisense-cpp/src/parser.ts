@@ -1,9 +1,9 @@
 import type { TextmateToken } from 'vscode-textmate-languageservice'
 import type { SharedFormulaInfo } from './types'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
-import { Range, window } from 'vscode'
+import { Range, TextLine, window } from 'vscode'
 import { assign, createActor, createMachine, raise } from 'xstate'
-import { color, config, doc } from './store/shared'
+import { color, config, doc, lineHeight, scale } from './store/shared'
 
 // https://www.doxygen.nl/manual/formulas.html
 
@@ -180,6 +180,7 @@ const FormulaStatus = {
                   params.event.pos + 1,
                 )),
                 mark: params.context.mark,
+                block: params.self.getSnapshot().matches('InBlockDoc'),
               }),
               ranges: undefined,
               mark: undefined,
@@ -379,6 +380,7 @@ export const StateMachine = createMachine({
 export interface DocumentFormulaContext {
   ranges: Range[]
   mark: MarkInfo
+  block: boolean
 }
 
 const supportedLangs = ['c', 'cpp'] as const
@@ -425,6 +427,38 @@ export async function parse(tokens: TextmateToken[], lang: SupportedLang): Promi
   return StateActor.getSnapshot().context.result
 }
 
+export function filledRange(ranges: Range[], block: boolean) {
+  if (!doc.value || ranges.length <= 2)
+    return { start: ranges[0].start.line, end: ranges[0].end.line }
+
+  const first = ranges.at(0)!
+  const last = ranges.at(-1)!
+
+  let [firstFilled, lastFilled] = [false, false]
+  let line: TextLine, pos: number
+  if (block) {
+    line = doc.value.lineAt(first.start.line)
+    pos = line.firstNonWhitespaceCharacterIndex
+    if (line.text[pos] === '*')
+      pos += 1 + +(line.text[pos + 1] === ' ')
+    firstFilled = first.start.character === pos
+  }
+  else {
+    line = doc.value.lineAt(first.start.line)
+    pos = line.firstNonWhitespaceCharacterIndex
+    pos = pos + 3 + +(line.text[pos + 3] === ' ')
+    firstFilled = first.start.character === pos
+  }
+
+  line = doc.value.lineAt(last.end.line)
+  lastFilled = line.range.end.character === last.end.character
+
+  return {
+    start: first.start.line + +!(firstFilled),
+    end: last.end.line - +!(lastFilled),
+  }
+}
+
 export function render(formulas: DocumentFormulaContext[]): SharedFormulaInfo[] {
   if (!doc.value)
     return []
@@ -432,7 +466,7 @@ export function render(formulas: DocumentFormulaContext[]): SharedFormulaInfo[] 
   const result: SharedFormulaInfo[] = []
   for (const formula of formulas) {
     const texes: string[] = []
-    const { ranges, mark } = formula
+    const { ranges, mark, block } = formula
 
     if (ranges.length === 0)
       continue
@@ -440,8 +474,8 @@ export function render(formulas: DocumentFormulaContext[]): SharedFormulaInfo[] 
     let [depend, max] = [ranges[0], 0]
     for (const range of ranges) {
       const text = doc.value.getText(range)
-      if (text.length > max) {
-        max = text.length
+      if (range.end.character > max) {
+        max = range.end.character
         depend = range
       }
       texes.push(text)
@@ -456,10 +490,16 @@ export function render(formulas: DocumentFormulaContext[]): SharedFormulaInfo[] 
       tex = `\\begin{${env}}${tex.slice(idx + 2)}\\end{${env}}`
     }
 
-    const preview = transformer.from(tex, color.value, config.extension.scale)
-    const display = (ranges.at(0)!.start.line + ranges.at(-1)!.end.line) / 2
+    const { start, end } = filledRange(ranges, block)
 
-    result.push({ ranges, preview, depend, display })
+    const preview = transformer.from(tex, {
+      color: color.value,
+      scale: scale.value,
+      maxHeight: (end - start + 1) * lineHeight.value,
+    })
+    const display = (start + end) / 2
+
+    result.push({ ranges, preview, depend, display, width: max })
   }
 
   return result

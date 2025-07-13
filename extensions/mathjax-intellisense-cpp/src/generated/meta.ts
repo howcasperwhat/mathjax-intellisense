@@ -111,12 +111,12 @@ export const configs = {
   /**
    * Scale factor of the preview formula.
    * @key `mathjax-intellisense-ccpp.scale`
-   * @default `1`
+   * @default `0.8`
    * @type `number`
    */
   scale: {
     key: "mathjax-intellisense-ccpp.scale",
-    default: 1,
+    default: 0.8,
   } as ConfigItem<"mathjax-intellisense-ccpp.scale">,
   /**
    * Paths to files containing LaTeX preamble to preload.
@@ -146,7 +146,7 @@ export const scopedConfigs = {
     "interval": 200,
     "code": "font-weight: bold;",
     "preview": "",
-    "scale": 1,
+    "scale": 0.8,
     "preload": [],
   } satisfies ScopedConfigKeyTypeMap,
 }

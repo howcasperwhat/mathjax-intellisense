@@ -35,7 +35,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
-    "mathjax-tools": "workspace:*"
+    "mathjax-intellisense-tools": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:types",

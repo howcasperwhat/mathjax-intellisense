@@ -18,7 +18,7 @@ export async function useAnnotation(context: ExtensionContext) {
     textDecoration: `none; vertical-align:top;`,
   }
   const ShowCodeOptions = computed<DecorationRenderOptions>(() => ({
-    textDecoration: `underline !important; vertical-align:top;`,
+    textDecoration: `none; vertical-align:top;`,
   }))
   const HideCodeOptions: DecorationRenderOptions = {
     textDecoration: 'none; vertical-align:top; display: none;',
@@ -26,7 +26,7 @@ export async function useAnnotation(context: ExtensionContext) {
 
   const INJECTION = [
     'position:relative',
-    'display:inline-block',
+    'display:inline-flex',
     'top:50%',
     'transform:translateY(-50%)',
     'vertical-align:top',

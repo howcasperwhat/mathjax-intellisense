@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build:tools": "pnpm -C packages/mathjax-intellisense-tools run build",
+    "dev:tools": "pnpm -C packages/mathjax-intellisense-tools run dev",
     "update": "pnpm run update:cpp && pnpm run update:python",
     "update:cpp": "pnpm -C extensions/mathjax-intellisense-cpp run update",
     "update:python": "pnpm -C extensions/mathjax-intellisense-python run update",

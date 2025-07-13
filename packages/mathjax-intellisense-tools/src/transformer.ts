@@ -14,13 +14,19 @@ export class FormulaPreview {
   public readonly code: string
   public readonly error: boolean
   public readonly url: string
-  public constructor(width: number, height: number, code: string, color?: string) {
+  public constructor(width: number, height: number, code: string, color: string) {
     this.width = width
     this.height = height
-    this.code = color ? code.replaceAll('currentColor', color) : code
+    this.code = code.replaceAll('currentColor', color)
     this.error = code.includes('data-mjx-error')
     this.url = `data:image/svg+xml;base64,${Buffer.from(this.code).toString('base64')}`
   }
+}
+
+export interface TransformOptions {
+  color?: string
+  scale?: number
+  maxHeight?: number
 }
 
 class Transformer {
@@ -28,6 +34,14 @@ class Transformer {
   private document?: ReturnType<typeof mathjax.document>
   private context?: string
   private mmlPackages = ['action']
+
+  private norm(options: TransformOptions): Required<TransformOptions> {
+    return {
+      color: options.color ?? 'currentColor',
+      scale: options.scale ?? 1,
+      maxHeight: options.maxHeight ?? Infinity,
+    }
+  }
 
   public constructor() {
     this.adaptor = liteAdaptor()
@@ -51,15 +65,17 @@ class Transformer {
     this.document.convert(context)
   }
 
-  public from(tex: string, color?: string, scale: number = 1): FormulaPreview {
+  public from(tex: string, _options: TransformOptions = {}): FormulaPreview {
+    const options = this.norm(_options)
     const elem = this.document!.convert(tex)
-    const svg: LiteElement = elem.children[0]
-    const width = exToPx(Number.parseFloat(svg.attributes.width) * scale)
-    const height = exToPx(Number.parseFloat(svg.attributes.height) * scale)
-    this.adaptor!.setAttribute(svg, 'width', `${width}px`)
-    this.adaptor!.setAttribute(svg, 'height', `${height}px`)
+    const svg: LiteElement = <LiteElement>elem.children[0]
+    const width = exToPx(Number.parseFloat(svg.attributes.width) * options.scale)
+    const height = exToPx(Number.parseFloat(svg.attributes.height) * options.scale)
+    const ratio = Math.min(options.maxHeight / height, 1)
+    this.adaptor!.setAttribute(svg, 'width', `${width * ratio}px`)
+    this.adaptor!.setAttribute(svg, 'height', `${height * ratio}px`)
     const code = this.adaptor!.innerHTML(elem)
-    return new FormulaPreview(width, height, code, color)
+    return new FormulaPreview(width, height, code, options.color)
   }
 }
 

@@ -6,4 +6,5 @@ export interface SharedFormulaInfo {
   preview: FormulaPreview
   depend: Range
   display: number
+  width: number
 }

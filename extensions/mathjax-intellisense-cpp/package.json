@@ -51,7 +51,7 @@
         },
         "mathjax-intellisense-ccpp.scale": {
           "type": "number",
-          "default": 1,
+          "default": 0.8,
           "description": "Scale factor of the preview formula."
         },
         "mathjax-intellisense-ccpp.preload": {
