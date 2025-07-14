@@ -18,6 +18,7 @@
     "Snippets"
   ],
   "main": "./dist/index.js",
+  "icon": "assets/logo.png",
   "engines": {
     "vscode": "^1.84.0"
   },
