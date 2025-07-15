@@ -14,18 +14,5 @@
       ],
       "preLaunchTask": "npm: dev:ccpp"
     },
-    {
-      "name": "Run Extension for Python",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/extensions/mathjax-intellisense-python"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/extensions/mathjax-intellisense-python/dist/**/*.js"
-      ],
-      "preLaunchTask": "npm: dev:python"
-    }
   ]
 }

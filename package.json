@@ -12,17 +12,15 @@
     "typecheck": "tsc --noEmit",
     "build:tools": "pnpm -C packages/mathjax-intellisense-tools run build",
     "dev:tools": "pnpm -C packages/mathjax-intellisense-tools run dev",
-    "update": "pnpm run update:ccpp && pnpm run update:python",
+    "update": "pnpm run update:ccpp",
     "update:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run update",
-    "update:python": "pnpm -C extensions/mathjax-intellisense-python run update",
     "dev:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run dev",
-    "dev:python": "pnpm -C extensions/mathjax-intellisense-python run dev",
-    "pack:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run pack",
-    "pack:python": "pnpm -C extensions/mathjax-intellisense-python run pack"
+    "pack:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run pack"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
     "@vscode/vsce": "catalog:vscode",
+    "bumpp": "catalog:dev",
     "eslint": "catalog:lint",
     "jiti": "catalog:lint",
     "simple-git-hooks": "catalog:lint",
