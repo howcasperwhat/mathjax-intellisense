@@ -43,7 +43,7 @@
         },
         "mathjax-intellisense-ccpp.code": {
           "type": "string",
-          "default": "font-weight: bold;",
+          "default": "border-bottom: 1px dashed;",
           "description": "Style of matched LaTeX code."
         },
         "mathjax-intellisense-ccpp.preview": {

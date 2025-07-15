@@ -18,7 +18,7 @@ export async function useAnnotation(context: ExtensionContext) {
     textDecoration: `none; vertical-align:top;`,
   }
   const ShowCodeOptions = computed<DecorationRenderOptions>(() => ({
-    textDecoration: `none; vertical-align:top;`,
+    textDecoration: `none; vertical-align:top; ${config.extension.code}`,
   }))
   const HideCodeOptions: DecorationRenderOptions = {
     textDecoration: 'none; vertical-align:top; display: none;',
@@ -26,7 +26,7 @@ export async function useAnnotation(context: ExtensionContext) {
 
   const INJECTION = [
     'position:relative',
-    'display:inline-flex',
+    'display:inline-block',
     'top:50%',
     'transform:translateY(-50%)',
     'vertical-align:top',
@@ -41,7 +41,7 @@ export async function useAnnotation(context: ExtensionContext) {
           renderOptions: {
             after: {
               contentIconPath: Uri.parse(preview.url),
-              border: `none;${INJECTION};top:${50 + (display - depend.start.line) * 100}%;`,
+              border: `none;${config.extension.preview}${INJECTION};top:${50 + (display - depend.start.line) * 100}%;`,
             },
           },
         }
@@ -52,7 +52,7 @@ export async function useAnnotation(context: ExtensionContext) {
           renderOptions: {
             after: {
               contentIconPath: Uri.parse(preview.url),
-              border: `none;${INJECTION};`,
+              border: `none;${config.extension.preview}${INJECTION};`,
             },
           },
         }

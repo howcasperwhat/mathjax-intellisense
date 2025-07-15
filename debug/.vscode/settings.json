@@ -1,3 +1,8 @@
 {
-  "mathjax-intellisense-ccpp.scale": 0.8
+  "mathjax-intellisense-ccpp.scale": 0.8,
+  "mathjax-intellisense-ccpp.code": "border-bottom: 1px dashed;",
+  "mathjax-intellisense-ccpp.preview": "border: 1px solid #888; border-radius: 2px; padding: 2px;",
+  "mathjax-intellisense-ccpp.color": "auto",
+  "mathjax-intellisense-ccpp.interval": 200,
+  "mathjax-intellisense-ccpp.preload": []
 }
