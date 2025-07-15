@@ -1,4 +1,4 @@
-# MathJax Intellisense for C/C++
+# MathJax IntelliSense for C/C++
 
 ## Configurations
 

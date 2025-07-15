@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
-  "description": "Tools for MathJax Intellisense.",
+  "description": "Tools for MathJax IntelliSense.",
   "author": "Casper Huang <casper.w.huang@qq.com>",
   "license": "MIT",
   "homepage": "https://github.com/howcasperwhat/mathjax-intellisense#readme",

@@ -10,14 +10,15 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp -r && pnpm -r run publish",
+    "release": "bumpp -r",
     "build:tools": "pnpm -C packages/mathjax-intellisense-tools run build",
     "dev:tools": "pnpm -C packages/mathjax-intellisense-tools run dev",
     "update": "pnpm run update:ccpp",
     "update:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run update",
     "pack": "pnpm run pack:ccpp",
     "pack:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run pack",
-    "dev:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run dev"
+    "dev:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run dev",
+    "publish:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run publish"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
