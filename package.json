@@ -1,6 +1,6 @@
 {
   "name": "mathjax-intellisense",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@10.7.0",
   "workspaces": [
@@ -10,12 +10,14 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "release": "bumpp -r && pnpm -r run publish",
     "build:tools": "pnpm -C packages/mathjax-intellisense-tools run build",
     "dev:tools": "pnpm -C packages/mathjax-intellisense-tools run dev",
     "update": "pnpm run update:ccpp",
     "update:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run update",
-    "dev:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run dev",
-    "pack:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run pack"
+    "pack": "pnpm run pack:ccpp",
+    "pack:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run pack",
+    "dev:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run dev"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
