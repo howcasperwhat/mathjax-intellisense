@@ -76,14 +76,12 @@
     "pack": "vsce package --no-dependencies",
     "publish": "vsce publish --no-dependencies"
   },
-  "dependencies": {
-    "mathjax-intellisense-tools": "workspace:*"
-  },
   "devDependencies": {
     "@types/node": "catalog:types",
     "@types/vscode": "^1.84.0",
     "@vscode/vsce": "catalog:vscode",
     "fast-glob": "catalog:deps",
+    "mathjax-intellisense-tools": "workspace:*",
     "pathe": "catalog:deps",
     "reactive-vscode": "catalog:vscode",
     "typescript": "catalog:bundling",
