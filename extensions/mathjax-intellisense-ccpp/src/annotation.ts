@@ -75,7 +75,8 @@ export async function useAnnotation(context: ExtensionContext) {
       return
 
     const tokens = await services[lang.value].fetch(doc.value!)
-    formulas.value = render(await parse(tokens, lang.value))
+    const { docs: _docs, formulas: _formulas } = await parse(tokens, lang.value)
+    formulas.value = render(_docs, _formulas)
   }
   const trigger = debounce(update, config.extension.interval)
 

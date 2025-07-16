@@ -23,7 +23,7 @@ interface MachineEvent {
 }
 
 interface MachineContext {
-  result: DocumentFormulaContext[]
+  formulas: DocumentFormulaContext[]
   docs: DocumentContext[]
   docid?: number
   longest?: number
@@ -53,7 +53,7 @@ type MarkBegin = typeof BEGIN_MARKS[number]
 
 const SeekDoc = {
   entry: assign(({ context }: MachineParams) => ({
-    result: context.result,
+    result: context.formulas,
     range: [],
     start: undefined,
     mark: undefined,
@@ -225,7 +225,7 @@ const FormulaStatus = {
               const { tokens, index, pos } = event
               const line = tokens[index].line
               return {
-                result: context.result.concat({
+                result: context.formulas.concat({
                   ranges: context.ranges!.concat(new Range(
                     line,
                     context.fstart!,
@@ -442,7 +442,7 @@ export const StateMachine = createMachine({
   id: 'docstring-c/c++',
   initial: 'SeekDoc',
   context: {
-    result: [],
+    formulas: [],
     docs: [],
     docid: undefined,
     longest: undefined,
@@ -478,7 +478,7 @@ const KEY_SCOPES = Object.fromEntries(supportedLangs.map(lang => [lang, {
   BLOCK_END: `punctuation.definition.comment.end.documentation.${lang}`,
 }])) as Record<SupportedLang, Record<KeyScope, string>>
 
-export async function parse(tokens: TextmateToken[], lang: SupportedLang): Promise<DocumentFormulaContext[]> {
+export async function parse(tokens: TextmateToken[], lang: SupportedLang) {
   const StateActor = createActor(StateMachine)
   StateActor.start()
   let line: number = 0
@@ -512,7 +512,11 @@ export async function parse(tokens: TextmateToken[], lang: SupportedLang): Promi
   })
   StateActor.send({ type: 'EOF' })
   StateActor.stop()
-  return StateActor.getSnapshot().context.result
+  const snapshot = StateActor.getSnapshot()
+  return {
+    formulas: snapshot.context.formulas,
+    docs: snapshot.context.docs,
+  }
 }
 
 export function filledRange(ranges: Range[], block: boolean) {
