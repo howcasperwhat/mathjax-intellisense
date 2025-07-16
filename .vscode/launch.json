@@ -13,6 +13,6 @@
         "${workspaceFolder}/extensions/mathjax-intellisense-ccpp/dist/**/*.js"
       ],
       "preLaunchTask": "npm: dev:ccpp"
-    },
+    }
   ]
 }

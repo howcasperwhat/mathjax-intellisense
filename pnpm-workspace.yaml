@@ -12,6 +12,8 @@ catalogs:
     pathe: ^2.0.3
     vscode-textmate-languageservice: ^4.0.0
     xstate: ^5.20.0
+  dev:
+    bumpp: ^10.2.0
   lint:
     '@antfu/eslint-config': ^4.2.0
     eslint: ^9.20.0
@@ -23,9 +25,6 @@ catalogs:
     '@vscode/vsce': ^3.6.0
     reactive-vscode: ^0.3.1
     vscode-ext-gen: ^1.0.0
-  dev:
-    bumpp: ^10.2.0
-
 ignoredBuiltDependencies:
   - '@vscode/vsce-sign'
   - esbuild
