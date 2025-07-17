@@ -1,7 +1,7 @@
-import { Range } from "vscode"
-import { TextmateToken } from "vscode-textmate-languageservice"
-import { assign, createActor, createMachine } from "xstate"
-import { LanguageType } from "../../types"
+import type { TextmateToken } from 'vscode-textmate-languageservice'
+import type { LanguageType } from '../../types'
+import { Range } from 'vscode'
+import { assign, createActor, createMachine } from 'xstate'
 
 export interface MultipleDoc {
   ranges: Range[]
@@ -23,10 +23,10 @@ export interface MultipleDocMachineEvent {
 
 // Wait/Met `NOT_WHITESPACE`
 export const MultipleDocMachine = createMachine({
-  id: "MultipleDocMachine",
+  id: 'MultipleDocMachine',
   initial: 'Outside',
   types: {} as {
-    context: MultipleDocMachineContext,
+    context: MultipleDocMachineContext
     events: MultipleDocMachineEvent
   },
   context: {
@@ -46,8 +46,8 @@ export const MultipleDocMachine = createMachine({
           start: undefined,
           line: undefined,
         }
-      })
-    }
+      }),
+    },
   },
   states: {
     Outside: {
@@ -61,9 +61,9 @@ export const MultipleDocMachine = createMachine({
               line: token.line,
               start: token.endIndex,
             }
-          })
-        }
-      }
+          }),
+        },
+      },
     },
     Met: {
       on: {
@@ -74,9 +74,9 @@ export const MultipleDocMachine = createMachine({
             const token = tokens[index]
             const char = token.text[character!]
             return {
-              start: token.startIndex + character! + +(char === ' ')
+              start: token.startIndex + character! + +(char === ' '),
             }
-          })
+          }),
         },
         LINE_INCREMENT: {
           target: 'Wait',
@@ -89,14 +89,14 @@ export const MultipleDocMachine = createMachine({
                   context.start!,
                   context.line!,
                   tokens[index - 1].endIndex,
-                )
+                ),
               ),
               line: tokens[index].line,
               start: 0,
             }
-          })
-        }
-      }
+          }),
+        },
+      },
     },
     Wait: {
       on: {
@@ -116,7 +116,7 @@ export const MultipleDocMachine = createMachine({
                 line: token.line,
                 start: token.startIndex + character! + 1, // Skip the ` `
               }
-            })
+            }),
           },
           {
             guard: ({ event }) => {
@@ -133,7 +133,7 @@ export const MultipleDocMachine = createMachine({
                 line: token.line,
                 start: token.startIndex + character! + 1, // Skip the `*`
               }
-            })
+            }),
           },
           {
             target: 'Inside',
@@ -144,8 +144,8 @@ export const MultipleDocMachine = createMachine({
                 line: token.line,
                 start: token.startIndex + character!,
               }
-            })
-          }
+            }),
+          },
         ],
         LINE_INCREMENT: {
           target: 'Wait',
@@ -159,14 +159,14 @@ export const MultipleDocMachine = createMachine({
                   context.start!,
                   context.line!,
                   tokens[index - 1].endIndex,
-                )
+                ),
               ),
               line: token.line,
               start: 0,
             }
-          })
+          }),
         },
-      }
+      },
     },
     Inside: {
       on: {
@@ -184,14 +184,14 @@ export const MultipleDocMachine = createMachine({
                   context.start!,
                   context.line!,
                   tokens[index - 1].endIndex,
-                )
+                ),
               ),
             }
-          })
+          }),
         },
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
 export async function parse(tokens: TextmateToken[], lang: LanguageType) {
@@ -222,7 +222,7 @@ export async function parse(tokens: TextmateToken[], lang: LanguageType) {
         MultipleDocActor.send({
           type: key,
           tokens,
-          index
+          index,
         })
         return
       }

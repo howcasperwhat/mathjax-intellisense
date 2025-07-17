@@ -1,7 +1,7 @@
-import { Range } from "vscode"
-import { TextmateToken } from "vscode-textmate-languageservice"
-import { assign, createActor, createMachine } from "xstate"
-import { LanguageType } from "../../types"
+import type { TextmateToken } from 'vscode-textmate-languageservice'
+import type { LanguageType } from '../../types'
+import { Range } from 'vscode'
+import { assign, createActor, createMachine } from 'xstate'
 
 export interface SingleDoc {
   ranges: Range[]
@@ -23,10 +23,10 @@ export interface SingleDocMachineEvent {
 
 // Wait/Met `PUNCTUATION`
 export const SingleDocMachine = createMachine({
-  id: "SingleDocMachine",
+  id: 'SingleDocMachine',
   initial: 'Outside',
   types: {} as {
-    context: SingleDocMachineContext,
+    context: SingleDocMachineContext
     events: SingleDocMachineEvent
   },
   context: {
@@ -47,9 +47,9 @@ export const SingleDocMachine = createMachine({
               line: token.line,
               start: token.endIndex,
             }
-          })
-        }
-      }
+          }),
+        },
+      },
     },
     Met: {
       on: {
@@ -60,9 +60,9 @@ export const SingleDocMachine = createMachine({
             const token = tokens[index]
             const char = token.text[character!]
             return {
-              start: token.startIndex + character! + +(char === ' ')
+              start: token.startIndex + character! + +(char === ' '),
             }
-          })
+          }),
         },
         LINE_INCREMENT: {
           target: 'Wait',
@@ -75,12 +75,12 @@ export const SingleDocMachine = createMachine({
                   context.start!,
                   context.line!,
                   tokens[index - 1].endIndex,
-                )
+                ),
               ),
             }
-          })
-        }
-      }
+          }),
+        },
+      },
     },
     Wait: {
       on: {
@@ -93,7 +93,7 @@ export const SingleDocMachine = createMachine({
               line: token.line,
               start: token.endIndex,
             }
-          })
+          }),
         },
         CHARACTER: [
           {
@@ -116,7 +116,7 @@ export const SingleDocMachine = createMachine({
                 start: undefined,
                 line: undefined,
               }
-            })
+            }),
           },
         ],
         LINE_INCREMENT: {
@@ -130,9 +130,9 @@ export const SingleDocMachine = createMachine({
               start: undefined,
               line: undefined,
             }
-          })
+          }),
         },
-      }
+      },
     },
     Inside: {
       on: {
@@ -150,21 +150,21 @@ export const SingleDocMachine = createMachine({
                   context.start!,
                   context.line!,
                   tokens[index - 1].endIndex,
-                )
+                ),
               ),
             }
-          })
+          }),
         },
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
 export async function parse(tokens: TextmateToken[], lang: LanguageType) {
   const SingleDocActor = createActor(SingleDocMachine)
-  
+
   SingleDocActor.start()
-  
+
   let line: number = 0
   const scopes = Object.entries({
     PUNCTUATION: `punctuation.definition.comment.documentation.${lang}`,
@@ -185,7 +185,7 @@ export async function parse(tokens: TextmateToken[], lang: LanguageType) {
         SingleDocActor.send({
           type: key,
           tokens,
-          index
+          index,
         })
         return
       }
