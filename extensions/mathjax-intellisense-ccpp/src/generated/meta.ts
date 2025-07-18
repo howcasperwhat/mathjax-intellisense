@@ -4,9 +4,9 @@
 // Meta info
 export const publisher = "howcasperwhat"
 export const name = "mathjax-intellisense-ccpp"
-export const version = "0.0.0"
-export const displayName = "MathJax Intellisense for C/C++"
-export const description = "A VS Code extension that provides MathJax intellisense for C/C++."
+export const version = "0.0.2"
+export const displayName = "MathJax IntelliSense for C/C++"
+export const description = "A VS Code extension that provides MathJax IntelliSense for C/C++."
 export const extensionId = `${publisher}.${name}`
 
 /**
@@ -81,22 +81,22 @@ export const configs = {
   /**
    * Formula update interval(ms).
    * @key `mathjax-intellisense-ccpp.interval`
-   * @default `200`
+   * @default `300`
    * @type `number`
    */
   interval: {
     key: "mathjax-intellisense-ccpp.interval",
-    default: 200,
+    default: 300,
   } as ConfigItem<"mathjax-intellisense-ccpp.interval">,
   /**
    * Style of matched LaTeX code.
    * @key `mathjax-intellisense-ccpp.code`
-   * @default `"font-weight: bold;"`
+   * @default `"border-bottom: 1px dashed;"`
    * @type `string`
    */
   code: {
     key: "mathjax-intellisense-ccpp.code",
-    default: "font-weight: bold;",
+    default: "border-bottom: 1px dashed;",
   } as ConfigItem<"mathjax-intellisense-ccpp.code">,
   /**
    * Style of the inline formula preview.
@@ -109,7 +109,7 @@ export const configs = {
     default: "",
   } as ConfigItem<"mathjax-intellisense-ccpp.preview">,
   /**
-   * Scale factor of the preview formula.
+   * Scale factor of the formula preview.
    * @key `mathjax-intellisense-ccpp.scale`
    * @default `0.8`
    * @type `number`
@@ -143,8 +143,8 @@ export const scopedConfigs = {
   scope: "mathjax-intellisense-ccpp",
   defaults: {
     "color": "auto",
-    "interval": 200,
-    "code": "font-weight: bold;",
+    "interval": 300,
+    "code": "border-bottom: 1px dashed;",
     "preview": "",
     "scale": 0.8,
     "preload": [],

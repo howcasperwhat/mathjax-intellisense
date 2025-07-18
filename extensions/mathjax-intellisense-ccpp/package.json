@@ -37,7 +37,7 @@
         },
         "mathjax-intellisense-ccpp.interval": {
           "type": "number",
-          "default": 200,
+          "default": 300,
           "minimum": 100,
           "description": "Formula update interval(ms)."
         },
@@ -54,7 +54,7 @@
         "mathjax-intellisense-ccpp.scale": {
           "type": "number",
           "default": 0.8,
-          "description": "Scale factor of the preview formula."
+          "description": "Scale factor of the formula preview."
         },
         "mathjax-intellisense-ccpp.preload": {
           "type": "array",
