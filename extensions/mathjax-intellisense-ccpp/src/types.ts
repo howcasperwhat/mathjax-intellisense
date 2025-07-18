@@ -5,6 +5,9 @@ export interface SharedFormulaInfo {
   ranges: Range[]
   preview: FormulaPreview
   depend: Range
-  display: number
   width: number
+  start: number
+  end: number
 }
+
+export type LanguageType = 'c' | 'cpp'

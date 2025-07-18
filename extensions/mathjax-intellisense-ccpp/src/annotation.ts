@@ -1,10 +1,10 @@
-import type { DecorationRenderOptions, ExtensionContext } from 'vscode'
+import type { DecorationRenderOptions, ExtensionContext, Range } from 'vscode'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { debounce } from 'mathjax-intellisense-tools/utils'
 import { computed, useActiveEditorDecorations, watch } from 'reactive-vscode'
 import { Uri, window, workspace } from 'vscode'
-import { parse, render } from './parser'
 import { setupWatcher } from './preload'
+import { render } from './render'
 import { config, doc, formulas, lang, preloads, selections } from './store/shared'
 import { useTokenService } from './utils'
 
@@ -24,59 +24,59 @@ export async function useAnnotation(context: ExtensionContext) {
     textDecoration: 'none; vertical-align:top; display: none;',
   }
 
-  const INJECTION = [
-    'position:relative',
-    'display:inline-block',
-    'top:50%',
-    'transform:translateY(-50%)',
-    'vertical-align:top',
-    'line-height:0',
-  ].join(';')
+  const SHARED_STYLE = 'position:relative; display:inline-block; vertical-align:top; line-height:0;'
+  const center = (top: number, left?: number) => {
+    return [
+      `top: ${50 + top * 100}%`,
+      `left: ${left ? `${left}ch` : '0'}`,
+      `transform: translate(${left ? '-50%' : '0'}, -50%)`,
+    ].join(';')
+  }
+
+  const hidden = (ranges: Range[]) =>
+    ranges.every(range => selections.value.some(
+      selections => !selections.intersection(range),
+    ))
 
   useActiveEditorDecorations(MultiplePreviewOptions, () =>
-    formulas.value.map(({ ranges, preview, depend, display }) => {
-      if (ranges.length > 2) {
-        return {
-          range: depend,
-          renderOptions: {
-            after: {
-              contentIconPath: Uri.parse(preview.url),
-              border: `none;${config.extension.preview}${INJECTION};top:${50 + (display - depend.start.line) * 100}%;`,
-            },
+    formulas.value.map(({ ranges, preview, depend, width, start, end }) => {
+      const align = (end - start + 1 > 2 && hidden(ranges))
+        ? center((start + end) / 2 - depend.start.line, width / 2)
+        : center(0)
+      return {
+        range: depend,
+        renderOptions: {
+          after: {
+            contentIconPath: Uri.parse(preview.url),
+            border: `${[
+              'none',
+              config.extension.preview,
+              SHARED_STYLE,
+              align,
+            ].join(';')}`,
           },
-        }
-      }
-      else {
-        return {
-          range: ranges[0],
-          renderOptions: {
-            after: {
-              contentIconPath: Uri.parse(preview.url),
-              border: `none;${config.extension.preview}${INJECTION};`,
-            },
-          },
-        }
+        },
       }
     }), { updateOn: ['effect'] })
-  useActiveEditorDecorations(ShowCodeOptions, () => {
-    return formulas.value
-      .flatMap(({ ranges }) => ranges)
-      .map(range => ({ range }))
-  }, { updateOn: ['effect'] })
-  useActiveEditorDecorations(HideCodeOptions, () =>
-    formulas.value.filter(({ ranges }) =>
-      ranges.every(range => selections.value.some(
-        selections => !selections.intersection(range),
-      )),
-    ).flatMap(({ ranges }) => ranges), { updateOn: ['effect'] })
+  useActiveEditorDecorations(
+    ShowCodeOptions,
+    () => formulas.value
+      .flatMap(({ ranges }) => ranges),
+    { updateOn: ['effect'] },
+  )
+  useActiveEditorDecorations(
+    HideCodeOptions,
+    () => formulas.value
+      .filter(({ ranges }) => hidden(ranges))
+      .flatMap(({ ranges }) => ranges),
+    { updateOn: ['effect'] },
+  )
 
   const update = async () => {
     if (!lang.value)
       return
-
     const tokens = await services[lang.value].fetch(doc.value!)
-    const { docs: _docs, formulas: _formulas } = await parse(tokens, lang.value)
-    formulas.value = render(_docs, _formulas)
+    formulas.value = await render(tokens)
   }
   const trigger = debounce(update, config.extension.interval)
 
