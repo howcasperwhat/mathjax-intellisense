@@ -68,13 +68,14 @@ export const SingleDocMachine = createMachine({
           target: 'Wait',
           actions: assign(({ context, event }) => {
             const { tokens, index } = event
+            const prev = tokens[index - 1]
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
                   context.start!,
                   context.line!,
-                  tokens[index - 1].endIndex,
+                  prev.startIndex + prev.text.length,
                 ),
               ),
             }
@@ -143,13 +144,14 @@ export const SingleDocMachine = createMachine({
           target: 'Wait',
           actions: assign(({ event, context }) => {
             const { tokens, index } = event
+            const prev = tokens[index - 1]
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
                   context.start!,
                   context.line!,
-                  tokens[index - 1].endIndex,
+                  prev.startIndex + prev.text.length,
                 ),
               ),
             }

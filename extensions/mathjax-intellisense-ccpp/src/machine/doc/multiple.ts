@@ -3,6 +3,8 @@ import type { LanguageType } from '../../types'
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
 
+// Don't use `endIndex`, because it seems that `//` will be treated as two characters.
+
 export interface MultipleDoc {
   ranges: Range[]
 }
@@ -47,7 +49,7 @@ export const MultipleDocMachine = createMachine({
                 context.line!,
                 context.start!,
                 context.line!,
-                token.endIndex,
+                token.startIndex + token.text.length,
               ),
             ),
           }),
@@ -91,13 +93,14 @@ export const MultipleDocMachine = createMachine({
           target: 'Wait',
           actions: assign(({ context, event }) => {
             const { tokens, index } = event
+            const prev = tokens[index - 1]
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
                   context.start!,
                   context.line!,
-                  tokens[index - 1].endIndex,
+                  prev.startIndex + prev.text.length,
                 ),
               ),
               line: tokens[index].line,
@@ -161,13 +164,14 @@ export const MultipleDocMachine = createMachine({
           actions: assign(({ context, event }) => {
             const { tokens, index } = event
             const token = tokens[index]
+            const prev = tokens[index - 1]
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
                   context.start!,
                   context.line!,
-                  tokens[index - 1].endIndex,
+                  prev.startIndex + prev.text.length,
                 ),
               ),
               line: token.line,
@@ -186,13 +190,14 @@ export const MultipleDocMachine = createMachine({
           target: 'Wait',
           actions: assign(({ event, context }) => {
             const { tokens, index } = event
+            const prev = tokens[index - 1]
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
                   context.start!,
                   context.line!,
-                  tokens[index - 1].endIndex,
+                  prev.startIndex + prev.text.length,
                 ),
               ),
             }
