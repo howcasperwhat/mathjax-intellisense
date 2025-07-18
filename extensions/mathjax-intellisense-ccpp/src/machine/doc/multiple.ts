@@ -37,10 +37,19 @@ export const MultipleDocMachine = createMachine({
   },
   on: {
     PUNCTUATION_END: {
-      actions: assign(({ context }) => {
+      actions: assign(({ context, event }) => {
+        const { tokens, index } = event
+        const token = tokens[index]
         return {
           docs: (context.docs ?? []).concat({
-            ranges: context.ranges ?? [],
+            ranges: (context.ranges ?? []).concat(
+              new Range(
+                context.line!,
+                context.start!,
+                context.line!,
+                token.endIndex,
+              ),
+            ),
           }),
           ranges: undefined,
           start: undefined,
