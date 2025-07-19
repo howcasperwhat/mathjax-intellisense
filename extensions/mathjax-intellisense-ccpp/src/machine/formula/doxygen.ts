@@ -1,7 +1,9 @@
 // https://www.doxygen.nl/manual/formulas.html
 
+import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
+import { doc } from '../../store/shared'
 
 export interface DoxygenMark {
   name: string
@@ -256,6 +258,25 @@ export const DoxygenMachine = createMachine({
   },
 })
 
+export function extract(formula: DoxygenFormula) {
+  if (!doc.value)
+    return undefined
+
+  let text = formula.ranges.map(
+    range => doc.value!.getText(range),
+  ).join(formula.mark.sep).slice(3, -3).trim()
+
+  if (formula.mark.name === '{}') {
+    const idx = text.indexOf('}{')
+    if (idx === -1)
+      return undefined
+    const env = text.slice(0, idx)
+    text = `\\begin{${env}}\n${text.slice(idx + 2)}\n\\end{${env}}`
+  }
+
+  return text
+}
+
 export async function parse(lines: DocLine[]) {
   const DoxygenActor = createActor(DoxygenMachine)
 
@@ -286,5 +307,14 @@ export async function parse(lines: DocLine[]) {
 
   DoxygenActor.stop()
 
-  return snapshot.context.formulas
+  return snapshot.context.formulas.map((formula) => {
+    const text = extract(formula)
+    if (!text)
+      return undefined
+
+    return {
+      ranges: formula.ranges,
+      text,
+    }
+  }).filter(isTruthy)
 }

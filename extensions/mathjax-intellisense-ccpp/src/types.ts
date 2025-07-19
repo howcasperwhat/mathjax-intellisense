@@ -4,7 +4,6 @@ import type { Range } from 'vscode'
 export interface SharedFormulaInfo {
   ranges: Range[]
   preview: FormulaPreview
-  depend: Range
   width: number
   start: number
   end: number

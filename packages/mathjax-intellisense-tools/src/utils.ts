@@ -1,3 +1,4 @@
+import type { Range } from 'vscode'
 import { resolve as _resolve, isAbsolute, join } from 'pathe'
 import { workspace } from 'vscode'
 import { MATHJAX_TEX_EX } from './store/constant'
@@ -44,6 +45,10 @@ export function duplicate<T>(arr: T[]): T[] {
     }
   }
   return result
+}
+
+export function len(range: Range) {
+  return range.end.character - range.start.character + 1
 }
 
 export const isTruthy = <T>(a: T | undefined): a is T => Boolean(a)

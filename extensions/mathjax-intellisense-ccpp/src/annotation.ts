@@ -1,6 +1,6 @@
 import type { DecorationRenderOptions, ExtensionContext, Range } from 'vscode'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
-import { debounce } from 'mathjax-intellisense-tools/utils'
+import { debounce, len } from 'mathjax-intellisense-tools/utils'
 import { computed, useActiveEditorDecorations, watch } from 'reactive-vscode'
 import { Uri, window, workspace } from 'vscode'
 import { setupWatcher } from './preload'
@@ -39,7 +39,11 @@ export async function useAnnotation(context: ExtensionContext) {
     ))
 
   useActiveEditorDecorations(MultiplePreviewOptions, () =>
-    formulas.value.map(({ ranges, preview, depend, width, start, end }) => {
+    formulas.value.map(({ ranges, preview, width, start, end }) => {
+      const depend = ranges.reduce(
+        (max, cur) => len(cur) > len(max) ? cur : max,
+        ranges[0],
+      )
       const align = (end - start + 1 > 2 && hidden(ranges))
         ? center((start + end) / 2 - depend.start.line, width / 2)
         : center(0)
