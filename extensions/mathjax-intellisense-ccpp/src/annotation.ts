@@ -5,7 +5,7 @@ import { computed, useActiveEditorDecorations, watch } from 'reactive-vscode'
 import { Uri, window, workspace } from 'vscode'
 import { setupWatcher } from './preload'
 import { render } from './render'
-import { config, doc, formulas, lang, perf, preloads, selections } from './store/shared'
+import { config, document, formulas, lang, perf, preloads, selections } from './store/shared'
 import { useTokenService } from './utils'
 
 export async function useAnnotation(context: ExtensionContext) {
@@ -81,7 +81,7 @@ export async function useAnnotation(context: ExtensionContext) {
       return
 
     const begin = Date.now()
-    const tokens = await services[lang.value].fetch(doc.value!)
+    const tokens = await services[lang.value].fetch(document.value!)
     formulas.value = await render(tokens)
     const end = Date.now()
 

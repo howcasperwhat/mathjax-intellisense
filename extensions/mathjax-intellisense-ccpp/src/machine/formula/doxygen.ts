@@ -3,7 +3,7 @@
 import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
-import { doc } from '../../store/shared'
+import { document } from '../../store/shared'
 
 export interface DoxygenMark {
   name: string
@@ -259,11 +259,11 @@ export const DoxygenMachine = createMachine({
 })
 
 export function extract(formula: DoxygenFormula) {
-  if (!doc.value)
+  if (!document.value)
     return undefined
 
   let text = formula.ranges.map(
-    range => doc.value!.getText(range),
+    range => document.value!.getText(range),
   ).join(formula.mark.sep).slice(3, -3).trim()
 
   if (formula.mark.name === '{}') {

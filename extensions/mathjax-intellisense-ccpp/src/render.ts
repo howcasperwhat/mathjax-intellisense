@@ -5,7 +5,7 @@ import { assert } from 'node:console'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { parser } from './machine'
-import { color, doc, lang, lineHeight, scale } from './store/shared'
+import { color, document, lang, lineHeight, scale } from './store/shared'
 import { validateRanges } from './utils'
 
 function locate(
@@ -35,12 +35,12 @@ export async function render(
   assert(validateRanges(single.flatMap(({ ranges }) => ranges)))
   assert(validateRanges(multiple.flatMap(({ ranges }) => ranges)))
 
-  if (!doc.value)
+  if (!document.value)
     return []
 
   const lines = [...single, ...multiple].map(({ ranges }) =>
     ranges.map((range) => {
-      const text = doc.value!.getText(range)
+      const text = document.value!.getText(range)
       return { range, text }
     }),
   )

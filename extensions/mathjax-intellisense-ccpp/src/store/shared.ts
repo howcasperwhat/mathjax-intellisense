@@ -17,9 +17,8 @@ export const config = {
 
 export const isDark = useIsDarkTheme()
 export const editor = useActiveTextEditor()
-export const doc = computed(() => editor.value?.document)
+export const document = computed(() => editor.value?.document)
 export const selections = useTextEditorSelections(editor)
-export const text = useDocumentText(doc)
 
 export const formulas = shallowRef<SharedFormulaInfo[]>([])
 export const preloads = shallowRef<string[]>([])
@@ -27,10 +26,10 @@ export const preloads = shallowRef<string[]>([])
 export const perf = new Performance('Main')
 
 export const lang = computed(() => {
-  if (doc.value) {
-    if (doc.value.languageId === 'cpp')
+  if (document.value) {
+    if (document.value.languageId === 'cpp')
       return 'cpp'
-    if (doc.value.languageId === 'c')
+    if (document.value.languageId === 'c')
       return 'c'
   }
 })
