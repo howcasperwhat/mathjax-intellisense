@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "release": "bumpp -r",
+    "prepare": "pnpm run update",
     "build:tools": "pnpm -C packages/mathjax-intellisense-tools run build",
     "dev:tools": "pnpm -C packages/mathjax-intellisense-tools run dev",
     "update": "pnpm run update:ccpp",

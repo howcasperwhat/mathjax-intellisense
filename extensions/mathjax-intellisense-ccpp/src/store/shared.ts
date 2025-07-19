@@ -1,7 +1,8 @@
 import type { SharedFormulaInfo } from '../types'
 import { BASE_HEIGHT, GLODEB_LINE_HEIGHT_RATIO } from 'mathjax-intellisense-tools/constant'
-import { computed, defineConfigObject, extensionContext, shallowRef, useActiveTextEditor, useDocumentText, useIsDarkTheme, useTextEditorSelections } from 'reactive-vscode'
+import { computed, defineConfigObject, shallowRef, useActiveTextEditor, useDocumentText, useIsDarkTheme, useTextEditorSelections } from 'reactive-vscode'
 import * as Meta from '../generated/meta'
+import { Performance } from '../performance'
 
 export const config = {
   extension: defineConfigObject<Meta.NestedScopedConfigs>(
@@ -20,10 +21,10 @@ export const doc = computed(() => editor.value?.document)
 export const selections = useTextEditorSelections(editor)
 export const text = useDocumentText(doc)
 
-export const context = extensionContext
-
 export const formulas = shallowRef<SharedFormulaInfo[]>([])
 export const preloads = shallowRef<string[]>([])
+
+export const perf = new Performance('Main')
 
 export const lang = computed(() => {
   if (doc.value) {
