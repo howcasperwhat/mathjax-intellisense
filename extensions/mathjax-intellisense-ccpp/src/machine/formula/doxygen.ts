@@ -1,3 +1,5 @@
+// https://www.doxygen.nl/manual/formulas.html
+
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
 
