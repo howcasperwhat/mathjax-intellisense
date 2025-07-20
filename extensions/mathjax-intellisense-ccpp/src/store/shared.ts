@@ -1,6 +1,6 @@
 import type { SharedFormulaInfo } from '../types'
 import { BASE_HEIGHT, GLODEB_LINE_HEIGHT_RATIO } from 'mathjax-intellisense-tools/constant'
-import { computed, defineConfigObject, shallowRef, useActiveTextEditor, useDocumentText, useIsDarkTheme, useTextEditorSelections } from 'reactive-vscode'
+import { computed, defineConfigObject, shallowRef, useActiveTextEditor, useIsDarkTheme, useTextEditorSelections } from 'reactive-vscode'
 import * as Meta from '../generated/meta'
 import { Performance } from '../performance'
 

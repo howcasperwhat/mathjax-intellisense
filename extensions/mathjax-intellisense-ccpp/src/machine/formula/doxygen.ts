@@ -1,11 +1,13 @@
 // https://www.doxygen.nl/manual/formulas.html
 
+import type { DocContext } from '../doc/types'
+import type { FormulaContext } from './types'
 import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
 import { document } from '../../store/shared'
 
-export interface DoxygenMark {
+export interface DoxygenFormulaMark {
   name: string
   start: string
   end: string
@@ -13,35 +15,30 @@ export interface DoxygenMark {
 }
 
 const BEGIN_MARKS = ['$', '(', '[', '{'] as const
-type DoxygenMarkBegin = typeof BEGIN_MARKS[number]
+type DoxygenFormulaMarkBegin = typeof BEGIN_MARKS[number]
 const FORMULA_MARKERS = {
   '$': { name: '$$', start: '$', end: '$', sep: '' },
   '(': { name: '()', start: '(', end: ')', sep: '' },
   '[': { name: '[]', start: '[', end: ']', sep: '\n' },
   '{': { name: '{}', start: '{', end: '}', sep: '\n' },
-} as Record<DoxygenMarkBegin, DoxygenMark>
+} as Record<DoxygenFormulaMarkBegin, DoxygenFormulaMark>
 
 export interface DoxygenFormula {
   ranges: Range[]
-  mark: DoxygenMark
-}
-
-export interface DocLine {
-  range: Range
-  text: string
+  mark: DoxygenFormulaMark
 }
 
 export interface DoxygenMachineContext {
   formulas: DoxygenFormula[]
-  mark?: DoxygenMark
+  mark?: DoxygenFormulaMark
   ranges?: Range[]
   start?: number
   line?: number
 }
 
 export interface DoxygenMachineEvent {
-  type: 'LINE_INCREMENT' | 'CHARACTER'
-  lines: DocLine[]
+  type: 'LINE_INCREMENT' | 'CHARACTER' | 'END'
+  doc: DocContext
   index: number
   character?: number
 }
@@ -55,44 +52,58 @@ export const DoxygenMachine = createMachine({
   },
   context: {
     formulas: [],
+    mark: undefined,
     ranges: undefined,
     start: undefined,
     line: undefined,
   },
+  on: {
+    END: {
+      target: '.Outside',
+    },
+  },
   states: {
     Outside: {
+      entry: assign(() => {
+        return {
+          ranges: undefined,
+          mark: undefined,
+          start: undefined,
+          line: undefined,
+        }
+      }),
       on: {
         CHARACTER: {
           guard: ({ event }) => {
-            const { lines, index, character } = event
-            const line = lines[index]
+            const { doc, index, character } = event
+            const line = doc.lines[index]
             const char = line.text[character!]
             return char === '\\'
           },
-          target: 'OutsideInSlash',
+          target: 'OutsideInBackSlash',
         },
       },
     },
-    OutsideInSlash: {
+    OutsideInBackSlash: {
       on: {
         CHARACTER: [
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === 'f'
             },
-            target: 'OutsideInSlashF',
+            target: 'OutsideInBackSlashF',
           },
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === '\\'
             },
-            target: 'OutsideInSlash',
+            target: 'Outside',
           },
           {
             target: 'Outside',
@@ -103,23 +114,23 @@ export const DoxygenMachine = createMachine({
         },
       },
     },
-    OutsideInSlashF: {
+    OutsideInBackSlashF: {
       on: {
         CHARACTER: [
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
-              return BEGIN_MARKS.includes(char as DoxygenMarkBegin)
+              return BEGIN_MARKS.includes(char as DoxygenFormulaMarkBegin)
             },
             target: 'Inside',
             actions: assign(({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return {
-                mark: FORMULA_MARKERS[char as DoxygenMarkBegin],
+                mark: FORMULA_MARKERS[char as DoxygenFormulaMarkBegin],
                 start: line.range.start.character + character! - 2, // Skip the `\f`
                 line: line.range.start.line,
               }
@@ -127,12 +138,12 @@ export const DoxygenMachine = createMachine({
           },
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === '\\'
             },
-            target: 'OutsideInSlash',
+            target: 'OutsideInBackSlash',
           },
           {
             target: 'Outside',
@@ -147,8 +158,8 @@ export const DoxygenMachine = createMachine({
       on: {
         CHARACTER: {
           guard: ({ event }) => {
-            const { lines, index, character } = event
-            const line = lines[index]
+            const { doc, index, character } = event
+            const line = doc.lines[index]
             const char = line.text[character!]
             return char === '\\'
           },
@@ -157,15 +168,16 @@ export const DoxygenMachine = createMachine({
         LINE_INCREMENT: {
           target: 'Inside',
           actions: assign(({ context, event }) => {
-            const { lines, index } = event
-            const line = lines[index]
+            const { doc, index } = event
+            const line = doc.lines[index]
+            const prev = doc.lines[index - 1]
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
                   context.start!,
                   context.line!,
-                  lines[index - 1].range.end.character,
+                  prev.range.end.character,
                 ),
               ),
               start: line.range.start.character,
@@ -180,8 +192,8 @@ export const DoxygenMachine = createMachine({
         CHARACTER: [
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === 'f'
             },
@@ -189,12 +201,12 @@ export const DoxygenMachine = createMachine({
           },
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === '\\'
             },
-            target: 'InsideInSlash',
+            target: 'Inside',
           },
           {
             target: 'Inside',
@@ -210,15 +222,15 @@ export const DoxygenMachine = createMachine({
         CHARACTER: [
           {
             guard: ({ event, context }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === context.mark!.end
             },
             target: 'Outside',
             actions: assign(({ context, event }) => {
-              const { lines, index } = event
-              const line = lines[index]
+              const { doc, index } = event
+              const line = doc.lines[index]
               return {
                 formulas: context.formulas.concat({
                   ranges: (context.ranges ?? []).concat(
@@ -239,8 +251,8 @@ export const DoxygenMachine = createMachine({
           },
           {
             guard: ({ event }) => {
-              const { lines, index, character } = event
-              const line = lines[index]
+              const { doc, index, character } = event
+              const line = doc.lines[index]
               const char = line.text[character!]
               return char === '\\'
             },
@@ -277,17 +289,19 @@ export function extract(formula: DoxygenFormula) {
   return text
 }
 
-export async function parse(lines: DocLine[]) {
+export async function parse(
+  doc: DocContext,
+): Promise<FormulaContext[]> {
   const DoxygenActor = createActor(DoxygenMachine)
 
   DoxygenActor.start()
 
-  let _line: number = lines[0].range.start.line
-  lines.forEach((line, index) => {
+  let _line: number = doc.lines[0].range.start.line
+  doc.lines.forEach((line, index) => {
     if (line.range.start.line !== _line) {
       DoxygenActor.send({
         type: 'LINE_INCREMENT',
-        lines,
+        doc,
         index,
       })
       _line = line.range.start.line
@@ -296,7 +310,7 @@ export async function parse(lines: DocLine[]) {
     for (let i = 0; i < line.text.length; i++) {
       DoxygenActor.send({
         type: 'CHARACTER',
-        lines,
+        doc,
         index,
         character: i,
       })
@@ -314,6 +328,7 @@ export async function parse(lines: DocLine[]) {
 
     return {
       ranges: formula.ranges,
+      type: 'doxygen' as const,
       text,
     }
   }).filter(isTruthy)

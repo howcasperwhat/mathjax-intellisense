@@ -1,7 +1,10 @@
 import type { TextmateToken } from 'vscode-textmate-languageservice'
 import type { LanguageType } from '../../types'
+import type { DocContext } from './types'
+import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
+import { document } from '../../store/shared'
 
 // Don't use `endIndex`, because it seems that `//` will be treated as two characters.
 
@@ -17,7 +20,7 @@ export interface MultipleDocMachineContext {
 }
 
 export interface MultipleDocMachineEvent {
-  type: 'PUNCTUATION_BEGIN' | 'PUNCTUATION_END' | 'LINE_INCREMENT' | 'CHARACTER'
+  type: 'PUNCTUATION_BEGIN' | 'PUNCTUATION_END' | 'LINE_INCREMENT' | 'CHARACTER' | 'END'
   tokens: TextmateToken[]
   index: number
   character?: number
@@ -39,6 +42,7 @@ export const MultipleDocMachine = createMachine({
   },
   on: {
     PUNCTUATION_END: {
+      target: '.Outside',
       actions: assign(({ context, event }) => {
         const { tokens, index } = event
         const token = tokens[index]
@@ -53,6 +57,16 @@ export const MultipleDocMachine = createMachine({
               ),
             ),
           }),
+          ranges: undefined,
+          start: undefined,
+          line: undefined,
+        }
+      }),
+    },
+    END: {
+      target: '.Outside',
+      actions: assign(() => {
+        return {
           ranges: undefined,
           start: undefined,
           line: undefined,
@@ -208,7 +222,20 @@ export const MultipleDocMachine = createMachine({
   },
 })
 
-export async function parse(tokens: TextmateToken[], lang: LanguageType) {
+export function extract(doc: MultipleDoc) {
+  if (!document.value)
+    return undefined
+
+  return doc.ranges.map((range) => {
+    const text = document.value!.getText(range)
+    return { range, text }
+  })
+}
+
+export async function parse(
+  tokens: TextmateToken[],
+  lang: LanguageType,
+): Promise<DocContext[]> {
   const MultipleDocActor = createActor(MultipleDocMachine)
 
   MultipleDocActor.start()
@@ -254,7 +281,22 @@ export async function parse(tokens: TextmateToken[], lang: LanguageType) {
 
   const snapshot = MultipleDocActor.getSnapshot()
 
+  MultipleDocActor.send({
+    type: 'END',
+    tokens,
+    index: tokens.length,
+  })
+
   MultipleDocActor.stop()
 
-  return snapshot.context.docs
+  return snapshot.context.docs.map((doc) => {
+    const lines = extract(doc)
+    if (!lines)
+      return undefined
+
+    return {
+      lines,
+      type: '*' as const,
+    }
+  }).filter(isTruthy)
 }

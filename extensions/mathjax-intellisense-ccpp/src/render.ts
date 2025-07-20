@@ -1,12 +1,10 @@
 import type { Range } from 'vscode'
 import type { TextmateToken } from 'vscode-textmate-languageservice'
 import type { SharedFormulaInfo } from './types'
-import { assert } from 'node:console'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { parser } from './machine'
 import { color, document, lang, lineHeight, scale } from './store/shared'
-import { validateRanges } from './utils'
 
 function locate(
   franges: Range[],
@@ -31,27 +29,20 @@ export async function render(
 
   const single = await parser.doc.single(tokens, lang.value)
   const multiple = await parser.doc.multiple(tokens, lang.value)
+  const docs = [...single, ...multiple]
 
-  assert(validateRanges(single.flatMap(({ ranges }) => ranges)))
-  assert(validateRanges(multiple.flatMap(({ ranges }) => ranges)))
+  // assert(validateRanges(single.flatMap(({ lines }) => lines).map(({ range }) => range)))
+  // assert(validateRanges(multiple.flatMap(({ lines }) => lines).map(({ range }) => range)))
 
   if (!document.value)
     return []
 
-  const lines = [...single, ...multiple].map(({ ranges }) =>
-    ranges.map((range) => {
-      const text = document.value!.getText(range)
-      return { range, text }
-    }),
-  )
-
-  return (await Promise.all(lines.map(async (line) => {
-    const formulas = await parser.formula.doxygen(line)
-    const width = Math.max(...line.map(({ text }) => text.length))
-    const dranges = line.map(({ range }) => range)
+  return (await Promise.all(docs.map(async (doc) => {
+    const formulas = await parser.formula.doxygen(doc)
+    const width = Math.max(...doc.lines.map(line => line.text.length))
     return formulas.map((formula) => {
       const { ranges, text } = formula
-      const { start, end } = locate(ranges, dranges)
+      const { start, end } = locate(ranges, doc.lines.map(({ range }) => range))
       const n = end - start + 1
 
       const preview = transformer.from(text, {

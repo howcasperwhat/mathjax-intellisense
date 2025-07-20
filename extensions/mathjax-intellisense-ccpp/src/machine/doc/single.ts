@@ -1,7 +1,10 @@
 import type { TextmateToken } from 'vscode-textmate-languageservice'
 import type { LanguageType } from '../../types'
+import type { DocContext } from './types'
+import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { Range } from 'vscode'
 import { assign, createActor, createMachine } from 'xstate'
+import { document } from '../../store/shared'
 
 export interface SingleDoc {
   ranges: Range[]
@@ -15,7 +18,7 @@ export interface SingleDocMachineContext {
 }
 
 export interface SingleDocMachineEvent {
-  type: 'PUNCTUATION' | 'LINE_INCREMENT' | 'CHARACTER'
+  type: 'PUNCTUATION' | 'LINE_INCREMENT' | 'CHARACTER' | 'END'
   tokens: TextmateToken[]
   index: number
   character?: number
@@ -81,6 +84,28 @@ export const SingleDocMachine = createMachine({
             }
           }),
         },
+        END: {
+          target: 'Outside',
+          actions: assign(({ context, event }) => {
+            const { tokens, index } = event
+            const prev = tokens[index - 1]
+            return {
+              docs: context.docs.concat({
+                ranges: (context.ranges ?? []).concat(
+                  new Range(
+                    context.line!,
+                    context.start!,
+                    context.line!,
+                    prev.startIndex + prev.text.length,
+                  ),
+                ),
+              }),
+              ranges: undefined,
+              start: undefined,
+              line: undefined,
+            }
+          }),
+        },
       },
     },
     Wait: {
@@ -133,6 +158,19 @@ export const SingleDocMachine = createMachine({
             }
           }),
         },
+        END: {
+          target: 'Outside',
+          actions: assign(({ context }) => {
+            return {
+              docs: context.docs.concat({
+                ranges: context.ranges ?? [],
+              }),
+              ranges: undefined,
+              start: undefined,
+              line: undefined,
+            }
+          }),
+        },
       },
     },
     Inside: {
@@ -157,12 +195,47 @@ export const SingleDocMachine = createMachine({
             }
           }),
         },
+        END: {
+          target: 'Outside',
+          actions: assign(({ context, event }) => {
+            const { tokens, index } = event
+            const prev = tokens[index - 1]
+            return {
+              docs: context.docs.concat({
+                ranges: (context.ranges ?? []).concat(
+                  new Range(
+                    context.line!,
+                    context.start!,
+                    context.line!,
+                    prev.startIndex + prev.text.length,
+                  ),
+                ),
+              }),
+              ranges: undefined,
+              start: undefined,
+              line: undefined,
+            }
+          }),
+        },
       },
     },
   },
 })
 
-export async function parse(tokens: TextmateToken[], lang: LanguageType) {
+export function extract(doc: SingleDoc) {
+  if (!document.value)
+    return undefined
+
+  return doc.ranges.map((range) => {
+    const text = document.value!.getText(range)
+    return { range, text }
+  })
+}
+
+export async function parse(
+  tokens: TextmateToken[],
+  lang: LanguageType,
+): Promise<DocContext[]> {
   const SingleDocActor = createActor(SingleDocMachine)
 
   SingleDocActor.start()
@@ -204,9 +277,24 @@ export async function parse(tokens: TextmateToken[], lang: LanguageType) {
     }
   })
 
+  SingleDocActor.send({
+    type: 'END',
+    tokens,
+    index: tokens.length,
+  })
+
   const snapshot = SingleDocActor.getSnapshot()
 
   SingleDocActor.stop()
 
-  return snapshot.context.docs
+  return snapshot.context.docs.map((doc) => {
+    const lines = extract(doc)
+    if (!lines)
+      return undefined
+
+    return {
+      lines,
+      type: '/' as const,
+    }
+  }).filter(isTruthy)
 }
