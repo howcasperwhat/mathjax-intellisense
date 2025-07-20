@@ -14,13 +14,13 @@ catalogs:
     xstate: ^5.20.0
   dev:
     bumpp: ^10.2.0
-  test:
-    vitest: ^3.2.4
   lint:
     '@antfu/eslint-config': ^4.2.0
     eslint: ^9.20.0
     jiti: ^2.4.2
     simple-git-hooks: ^2.13.0
+  test:
+    vitest: ^3.2.4
   types:
     '@types/node': 18.x
   vscode:
