@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
+    "test": "vitest",
     "typecheck": "tsc --noEmit",
     "release": "bumpp -r",
     "prepare": "pnpm run update",
@@ -30,6 +31,7 @@
     "simple-git-hooks": "catalog:lint",
     "tsup": "catalog:bundling",
     "typescript": "catalog:bundling",
+    "vitest": "catalog:test",
     "vscode-ext-gen": "catalog:vscode"
   },
   "simple-git-hooks": {
