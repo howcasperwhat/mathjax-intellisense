@@ -45,6 +45,10 @@ catalogs:
     simple-git-hooks:
       specifier: ^2.13.0
       version: 2.13.0
+  test:
+    vitest:
+      specifier: ^3.2.4
+      version: 3.2.4
   types:
     '@types/node':
       specifier: 18.x
@@ -89,7 +93,7 @@ importers:
         specifier: catalog:bundling
         version: 5.8.3
       vitest:
-        specifier: ^3.2.4
+        specifier: catalog:test
         version: 3.2.4(@types/debug@4.1.12)(jiti@2.4.2)(yaml@2.8.0)
       vscode-ext-gen:
         specifier: catalog:vscode
