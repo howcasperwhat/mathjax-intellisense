@@ -242,7 +242,6 @@ export async function parse(
 
   let line: number = 0
   const scopes = Object.entries({
-    // PUNCTUATION: `punctuation.definition.comment.documentation.${lang}`,
     PUNCTUATION_BEGIN: `punctuation.definition.comment.begin.documentation.${lang}`,
     PUNCTUATION_END: `punctuation.definition.comment.end.documentation.${lang}`,
   }) as ['PUNCTUATION_BEGIN' | 'PUNCTUATION_END', string][]
