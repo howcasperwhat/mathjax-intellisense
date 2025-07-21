@@ -12,5 +12,6 @@
 | `mathjax-intellisense-ccpp.preview`  | Style of the inline formula preview.                 | `string` | `""`                           |
 | `mathjax-intellisense-ccpp.scale`    | Scale factor of the formula preview.                 | `number` | `0.8`                          |
 | `mathjax-intellisense-ccpp.preload`  | Paths to files containing LaTeX preamble to preload. | `array`  | `[]`                           |
+| `mathjax-intellisense-ccpp.formula`  | List of formula parsers to use.                      | `array`  | `["doxygen"]`                  |
 
 <!-- configs -->

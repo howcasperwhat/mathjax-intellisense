@@ -63,6 +63,15 @@
           },
           "default": [],
           "description": "Paths to files containing LaTeX preamble to preload."
+        },
+        "mathjax-intellisense-ccpp.formula": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["doxygen", "markdown"]
+          },
+          "default": ["doxygen"],
+          "description": "List of formula parsers to use."
         }
       }
     }

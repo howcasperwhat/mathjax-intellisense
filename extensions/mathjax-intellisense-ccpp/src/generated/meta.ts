@@ -30,6 +30,7 @@ export type ConfigKey =
   | "mathjax-intellisense-ccpp.preview"
   | "mathjax-intellisense-ccpp.scale"
   | "mathjax-intellisense-ccpp.preload"
+  | "mathjax-intellisense-ccpp.formula"
 
 export interface ConfigKeyTypeMap {
   "mathjax-intellisense-ccpp.color": string,
@@ -38,6 +39,7 @@ export interface ConfigKeyTypeMap {
   "mathjax-intellisense-ccpp.preview": string,
   "mathjax-intellisense-ccpp.scale": number,
   "mathjax-intellisense-ccpp.preload": string[],
+  "mathjax-intellisense-ccpp.formula": ("doxygen" | "markdown")[],
 }
 
 export interface ConfigShorthandMap {
@@ -47,6 +49,7 @@ export interface ConfigShorthandMap {
   preview: "mathjax-intellisense-ccpp.preview",
   scale: "mathjax-intellisense-ccpp.scale",
   preload: "mathjax-intellisense-ccpp.preload",
+  formula: "mathjax-intellisense-ccpp.formula",
 }
 
 export interface ConfigShorthandTypeMap {
@@ -56,6 +59,7 @@ export interface ConfigShorthandTypeMap {
   preview: string,
   scale: number,
   preload: string[],
+  formula: ("doxygen" | "markdown")[],
 }
 
 export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
@@ -128,6 +132,16 @@ export const configs = {
     key: "mathjax-intellisense-ccpp.preload",
     default: [],
   } as ConfigItem<"mathjax-intellisense-ccpp.preload">,
+  /**
+   * List of formula parsers to use.
+   * @key `mathjax-intellisense-ccpp.formula`
+   * @default `["doxygen"]`
+   * @type `array`
+   */
+  formula: {
+    key: "mathjax-intellisense-ccpp.formula",
+    default: ["doxygen"],
+  } as ConfigItem<"mathjax-intellisense-ccpp.formula">,
 }
 
 export interface ScopedConfigKeyTypeMap {
@@ -137,6 +151,7 @@ export interface ScopedConfigKeyTypeMap {
   "preview": string,
   "scale": number,
   "preload": string[],
+  "formula": ("doxygen" | "markdown")[],
 }
 
 export const scopedConfigs = {
@@ -148,6 +163,7 @@ export const scopedConfigs = {
     "preview": "",
     "scale": 0.8,
     "preload": [],
+    "formula": ["doxygen"],
   } satisfies ScopedConfigKeyTypeMap,
 }
 
@@ -159,6 +175,7 @@ export interface NestedConfigs {
     "preview": string,
     "scale": number,
     "preload": string[],
+    "formula": ("doxygen" | "markdown")[],
   },
 }
 
@@ -169,5 +186,6 @@ export interface NestedScopedConfigs {
   "preview": string,
   "scale": number,
   "preload": string[],
+  "formula": ("doxygen" | "markdown")[],
 }
 
