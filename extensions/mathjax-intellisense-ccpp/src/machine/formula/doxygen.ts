@@ -289,9 +289,9 @@ export function extract(formula: DoxygenFormula) {
   return text
 }
 
-export async function parse(
+export function parse(
   doc: DocContext,
-): Promise<FormulaContext[]> {
+): FormulaContext[] {
   const DoxygenActor = createActor(DoxygenMachine)
 
   DoxygenActor.start()

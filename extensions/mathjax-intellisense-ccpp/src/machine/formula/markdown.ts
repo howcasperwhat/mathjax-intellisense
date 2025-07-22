@@ -437,9 +437,9 @@ export function extract(formula: MarkdownFormula) {
   return text
 }
 
-export async function parse(
+export function parse(
   doc: DocContext,
-): Promise<FormulaContext[]> {
+): FormulaContext[] {
   const MarkdownActor = createActor(MarkdownMachine)
 
   MarkdownActor.start()

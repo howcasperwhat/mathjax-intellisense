@@ -232,10 +232,10 @@ export function extract(doc: MultipleDoc) {
   })
 }
 
-export async function parse(
+export function parse(
   tokens: TextmateToken[],
   lang: LanguageType,
-): Promise<DocContext[]> {
+): DocContext[] {
   const MultipleDocActor = createActor(MultipleDocMachine)
 
   MultipleDocActor.start()
@@ -256,7 +256,6 @@ export async function parse(
       line = token.line
     }
 
-    // TODO: When `Inside` state is active, skip the whole line
     for (const [key, value] of scopes) {
       if (token.scopes.includes(value)) {
         MultipleDocActor.send({
@@ -268,6 +267,7 @@ export async function parse(
       }
     }
 
+    // TODO: When `Inside` state is active, skip the whole line
     for (let i = 0; i < token.text.length; i++) {
       MultipleDocActor.send({
         type: 'CHARACTER',

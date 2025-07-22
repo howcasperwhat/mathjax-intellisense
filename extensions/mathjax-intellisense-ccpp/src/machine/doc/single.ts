@@ -232,10 +232,10 @@ export function extract(doc: SingleDoc) {
   })
 }
 
-export async function parse(
+export function parse(
   tokens: TextmateToken[],
   lang: LanguageType,
-): Promise<DocContext[]> {
+): DocContext[] {
   const SingleDocActor = createActor(SingleDocMachine)
 
   SingleDocActor.start()

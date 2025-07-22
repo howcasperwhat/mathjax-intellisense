@@ -82,7 +82,7 @@ export async function useAnnotation(context: ExtensionContext) {
 
     const begin = Date.now()
     const tokens = await services[lang.value].fetch(document.value!)
-    formulas.value = await render(tokens)
+    formulas.value = render(tokens)
     const end = Date.now()
 
     perf.tick(end - begin)
