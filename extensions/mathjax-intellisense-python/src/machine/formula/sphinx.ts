@@ -36,20 +36,25 @@ export function extract(
     ? joined
     : joined.replaceAll('\\\\', '\\')
   return directives.includes('nowrap') || directives.includes('no-wrap')
-    ? text.trim()
-    : `\\begin{split}\n${text.trim()}\n\\end{split}`
+    ? text
+    : `\\begin{split}\n${text}\n\\end{split}`
 }
 
-export function block(
+export function parse(
   doc: DocContext,
 ): FormulaContext[] {
-  let started = false
-  const formulas: FormulaContext[] = []
+  let inside = false
+
+  const regex = /(?<!\\):math:`(.*?)(?<!\\)`/g
+  const inlines: FormulaContext[] = []
+
+  const blocks: FormulaContext[] = []
   const ranges: Range[] = []
   const texts: string[] = []
+
   for (let i = 0; i < doc.lines.length; i++) {
     const line = doc.lines[i]
-    if (started) {
+    if (inside) {
       if (line.text.trim().length === 0) {
         ranges.push(line.range)
         texts.push(doc.type === 'raw' ? '\\\\' : '\\\\\\\\')
@@ -60,14 +65,14 @@ export function block(
       }
       else {
         const text = extract(texts, doc.type)
-        text && formulas.push({
+        text && blocks.push({
           ranges: [...ranges],
           type: 'sphinx' as const,
-          text: text.trim(),
+          text,
         })
         ranges.length = 0
         texts.length = 0
-        started = false
+        inside = false
         --i // Reprocess the current line
       }
     }
@@ -76,50 +81,36 @@ export function block(
         const str = line.text.slice(BLOCK_START_MARK.length)
         ranges.push(line.range)
         texts.push(str)
-        started = true
+        inside = true
+      }
+      else {
+        let match
+        regex.lastIndex = 0
+        // eslint-disable-next-line no-cond-assign
+        while ((match = regex.exec(line.text))) {
+          const start = regex.lastIndex - match[0].length
+          const end = regex.lastIndex
+          inlines.push({
+            ranges: [new Range(
+              line.range.start.line,
+              line.range.start.character + start,
+              line.range.start.line,
+              line.range.start.character + end,
+            )],
+            type: 'sphinx' as const,
+            text: match[1],
+          })
+        }
       }
     }
   }
-  if (started) {
+  if (inside) {
     const text = extract(texts, doc.type)
-    text && formulas.push({
+    text && blocks.push({
       ranges: [...ranges],
       type: 'sphinx' as const,
-      text: text.trim(),
+      text,
     })
   }
-  return formulas
-}
-
-export function inline(
-  doc: DocContext,
-): FormulaContext[] {
-  const regex = /(?<!\\):math:`(.*?)(?<!\\)`/g
-  const formulas: FormulaContext[] = []
-  doc.lines.forEach((line) => {
-    let match
-    regex.lastIndex = 0
-    // eslint-disable-next-line no-cond-assign
-    while ((match = regex.exec(line.text))) {
-      const start = regex.lastIndex - match[0].length
-      const end = regex.lastIndex
-      formulas.push({
-        ranges: [new Range(
-          line.range.start.line,
-          line.range.start.character + start,
-          line.range.start.line,
-          line.range.start.character + end,
-        )],
-        type: 'sphinx' as const,
-        text: match[1].trim(),
-      })
-    }
-  })
-  return formulas
-}
-
-export function parse(
-  doc: DocContext,
-): FormulaContext[] {
-  return [...inline(doc), ...block(doc)]
+  return [...inlines, ...blocks]
 }
