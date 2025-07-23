@@ -108,13 +108,15 @@ export const DocStringMachine = createMachine({
           actions: assign(({ context, event }) => {
             const { tokens, index } = event
             const prev = tokens[index - 1]
+            const end = prev.startIndex + prev.text.length
+            const start = Math.min(context.start!, end)
             return {
               ranges: (context.ranges ?? []).concat(
                 new Range(
                   context.line!,
-                  context.start!,
+                  start,
                   context.line!,
-                  prev.startIndex + prev.text.length,
+                  end,
                 ),
               ),
               start: context.tabwidth!,
@@ -127,14 +129,16 @@ export const DocStringMachine = createMachine({
           actions: assign(({ context, event }) => {
             const { tokens, index } = event
             const token = tokens[index]
+            const end = token.startIndex
+            const start = Math.min(context.start!, end)
             return {
               docs: context.docs.concat({
                 ranges: (context.ranges ?? []).concat(
                   new Range(
                     context.line!,
-                    context.start!,
+                    start,
                     context.line!,
-                    token.startIndex,
+                    end,
                   ),
                 ),
                 type: context.type!,
