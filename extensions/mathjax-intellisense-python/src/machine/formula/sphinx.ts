@@ -98,7 +98,9 @@ export function parse(
               line.range.start.character + end,
             )],
             type: 'sphinx' as const,
-            text: match[1],
+            text: doc.type === 'raw'
+              ? match[1]
+              : match[1].replaceAll('\\\\', '\\'),
           })
         }
       }
