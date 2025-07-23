@@ -4,7 +4,7 @@
 // Meta info
 export const publisher = "howcasperwhat"
 export const name = "mathjax-intellisense-ccpp"
-export const version = "0.0.3"
+export const version = "0.1.0"
 export const displayName = "MathJax IntelliSense for C/C++"
 export const description = "A VS Code extension that provides MathJax IntelliSense for C/C++."
 export const extensionId = `${publisher}.${name}`
@@ -31,6 +31,7 @@ export type ConfigKey =
   | "mathjax-intellisense-ccpp.scale"
   | "mathjax-intellisense-ccpp.preload"
   | "mathjax-intellisense-ccpp.formula"
+  | "mathjax-intellisense-ccpp.mode"
 
 export interface ConfigKeyTypeMap {
   "mathjax-intellisense-ccpp.color": string,
@@ -40,6 +41,7 @@ export interface ConfigKeyTypeMap {
   "mathjax-intellisense-ccpp.scale": number,
   "mathjax-intellisense-ccpp.preload": string[],
   "mathjax-intellisense-ccpp.formula": ("doxygen" | "markdown")[],
+  "mathjax-intellisense-ccpp.mode": ("edit" | "view" | "both"),
 }
 
 export interface ConfigShorthandMap {
@@ -50,6 +52,7 @@ export interface ConfigShorthandMap {
   scale: "mathjax-intellisense-ccpp.scale",
   preload: "mathjax-intellisense-ccpp.preload",
   formula: "mathjax-intellisense-ccpp.formula",
+  mode: "mathjax-intellisense-ccpp.mode",
 }
 
 export interface ConfigShorthandTypeMap {
@@ -60,6 +63,7 @@ export interface ConfigShorthandTypeMap {
   scale: number,
   preload: string[],
   formula: ("doxygen" | "markdown")[],
+  mode: ("edit" | "view" | "both"),
 }
 
 export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
@@ -142,6 +146,16 @@ export const configs = {
     key: "mathjax-intellisense-ccpp.formula",
     default: ["doxygen"],
   } as ConfigItem<"mathjax-intellisense-ccpp.formula">,
+  /**
+   * Mode of the extension.
+   * @key `mathjax-intellisense-ccpp.mode`
+   * @default `"both"`
+   * @type `string`
+   */
+  mode: {
+    key: "mathjax-intellisense-ccpp.mode",
+    default: "both",
+  } as ConfigItem<"mathjax-intellisense-ccpp.mode">,
 }
 
 export interface ScopedConfigKeyTypeMap {
@@ -152,6 +166,7 @@ export interface ScopedConfigKeyTypeMap {
   "scale": number,
   "preload": string[],
   "formula": ("doxygen" | "markdown")[],
+  "mode": ("edit" | "view" | "both"),
 }
 
 export const scopedConfigs = {
@@ -164,6 +179,7 @@ export const scopedConfigs = {
     "scale": 0.8,
     "preload": [],
     "formula": ["doxygen"],
+    "mode": "both",
   } satisfies ScopedConfigKeyTypeMap,
 }
 
@@ -176,6 +192,7 @@ export interface NestedConfigs {
     "scale": number,
     "preload": string[],
     "formula": ("doxygen" | "markdown")[],
+    "mode": ("edit" | "view" | "both"),
   },
 }
 
@@ -187,5 +204,6 @@ export interface NestedScopedConfigs {
   "scale": number,
   "preload": string[],
   "formula": ("doxygen" | "markdown")[],
+  "mode": ("edit" | "view" | "both"),
 }
 

@@ -14,7 +14,7 @@ export async function useAnnotation(context: ExtensionContext) {
     cpp: await useTokenService('cpp', context),
   }
 
-  const MultiplePreviewOptions: DecorationRenderOptions = {
+  const PreviewOptions: DecorationRenderOptions = {
     textDecoration: `none; vertical-align:top;`,
   }
   const ShowCodeOptions = computed<DecorationRenderOptions>(() => ({
@@ -34,40 +34,48 @@ export async function useAnnotation(context: ExtensionContext) {
   }
 
   const hidden = (ranges: Range[]) =>
-    ranges.every(range => selections.value.some(
-      selections => !selections.intersection(range),
-    ))
+    config.extension.mode === 'edit'
+      ? false
+      : config.extension.mode === 'view'
+        ? true
+        : ranges.every(range => selections.value.some(
+            selections => !selections.intersection(range),
+          ))
 
-  useActiveEditorDecorations(MultiplePreviewOptions, () =>
-    formulas.value.map(({ ranges, preview, width, start, end }) => {
-      const depend = ranges.reduce(
-        (max, cur) => len(cur) > len(max) ? cur : max,
-        ranges[0],
-      )
-      const align = (end - start + 1 > 2 && hidden(ranges))
-        ? center((start + end) / 2 - depend.start.line, width / 2)
-        : center(0)
-      return {
-        range: depend,
-        renderOptions: {
-          after: {
-            contentIconPath: Uri.parse(preview.url),
-            border: `${[
-              'none',
-              config.extension.preview,
-              SHARED_STYLE,
-              align,
-            ].join(';')}`,
-          },
-        },
-      }
-    }), { updateOn: ['effect'] })
+  useActiveEditorDecorations(PreviewOptions, () =>
+    config.extension.mode === 'edit'
+      ? []
+      : formulas.value.map(({ ranges, preview, width, start, end }) => {
+          const depend = ranges.reduce(
+            (max, cur) => len(cur) > len(max) ? cur : max,
+            ranges[0],
+          )
+          const align = (end - start + 1 > 2 && hidden(ranges))
+            ? center((start + end) / 2 - depend.start.line, width / 2)
+            : center(0)
+          return {
+            range: depend,
+            renderOptions: {
+              after: {
+                contentIconPath: Uri.parse(preview.url),
+                border: `${[
+                  'none',
+                  config.extension.preview,
+                  SHARED_STYLE,
+                  align,
+                ].join(';')}`,
+              },
+            },
+          }
+        }), { updateOn: ['effect'] })
+
   useActiveEditorDecorations(
     ShowCodeOptions,
     () => formulas.value
       .flatMap(({ ranges }) => ranges),
     { updateOn: ['effect'] },
   )
+
   useActiveEditorDecorations(
     HideCodeOptions,
     () => formulas.value

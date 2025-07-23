@@ -4,7 +4,7 @@
 // Meta info
 export const publisher = "howcasperwhat"
 export const name = "mathjax-intellisense-python"
-export const version = "0.0.3"
+export const version = "0.1.0"
 export const displayName = "MathJax IntelliSense for Python"
 export const description = "A VS Code extension that provides MathJax IntelliSense for Python."
 export const extensionId = `${publisher}.${name}`
@@ -12,12 +12,36 @@ export const extensionId = `${publisher}.${name}`
 /**
  * Type union of all commands
  */
-export type CommandKey = never
+export type CommandKey = 
+  | "mathjax-intellisense.edit"
+  | "mathjax-intellisense.view"
+  | "mathjax-intellisense.both"
+  | "mathjax-intellisense.toggle"
 
 /**
  * Commands map registed by `howcasperwhat.mathjax-intellisense-python`
  */
 export const commands = {
+  /**
+   * MathJax IntelliSense: Edit Mode
+   * @value `mathjax-intellisense.edit`
+   */
+  mathjaxIntellisenseEdit: "mathjax-intellisense.edit",
+  /**
+   * MathJax IntelliSense: View Mode
+   * @value `mathjax-intellisense.view`
+   */
+  mathjaxIntellisenseView: "mathjax-intellisense.view",
+  /**
+   * MathJax IntelliSense: Both Modes
+   * @value `mathjax-intellisense.both`
+   */
+  mathjaxIntellisenseBoth: "mathjax-intellisense.both",
+  /**
+   * MathJax IntelliSense: Toggle Mode
+   * @value `mathjax-intellisense.toggle`
+   */
+  mathjaxIntellisenseToggle: "mathjax-intellisense.toggle",
 } satisfies Record<string, CommandKey>
 
 /**
@@ -31,6 +55,7 @@ export type ConfigKey =
   | "mathjax-intellisense-python.scale"
   | "mathjax-intellisense-python.preload"
   | "mathjax-intellisense-python.formula"
+  | "mathjax-intellisense-python.mode"
 
 export interface ConfigKeyTypeMap {
   "mathjax-intellisense-python.color": string,
@@ -40,6 +65,7 @@ export interface ConfigKeyTypeMap {
   "mathjax-intellisense-python.scale": number,
   "mathjax-intellisense-python.preload": string[],
   "mathjax-intellisense-python.formula": ("sphinx" | "markdown")[],
+  "mathjax-intellisense-python.mode": ("edit" | "view" | "both"),
 }
 
 export interface ConfigShorthandMap {
@@ -50,6 +76,7 @@ export interface ConfigShorthandMap {
   scale: "mathjax-intellisense-python.scale",
   preload: "mathjax-intellisense-python.preload",
   formula: "mathjax-intellisense-python.formula",
+  mode: "mathjax-intellisense-python.mode",
 }
 
 export interface ConfigShorthandTypeMap {
@@ -60,6 +87,7 @@ export interface ConfigShorthandTypeMap {
   scale: number,
   preload: string[],
   formula: ("sphinx" | "markdown")[],
+  mode: ("edit" | "view" | "both"),
 }
 
 export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
@@ -142,6 +170,16 @@ export const configs = {
     key: "mathjax-intellisense-python.formula",
     default: ["sphinx"],
   } as ConfigItem<"mathjax-intellisense-python.formula">,
+  /**
+   * Mode of the extension.
+   * @key `mathjax-intellisense-python.mode`
+   * @default `"both"`
+   * @type `string`
+   */
+  mode: {
+    key: "mathjax-intellisense-python.mode",
+    default: "both",
+  } as ConfigItem<"mathjax-intellisense-python.mode">,
 }
 
 export interface ScopedConfigKeyTypeMap {
@@ -152,6 +190,7 @@ export interface ScopedConfigKeyTypeMap {
   "scale": number,
   "preload": string[],
   "formula": ("sphinx" | "markdown")[],
+  "mode": ("edit" | "view" | "both"),
 }
 
 export const scopedConfigs = {
@@ -164,6 +203,7 @@ export const scopedConfigs = {
     "scale": 0.8,
     "preload": [],
     "formula": ["sphinx"],
+    "mode": "both",
   } satisfies ScopedConfigKeyTypeMap,
 }
 
@@ -176,6 +216,7 @@ export interface NestedConfigs {
     "scale": number,
     "preload": string[],
     "formula": ("sphinx" | "markdown")[],
+    "mode": ("edit" | "view" | "both"),
   },
 }
 
@@ -187,5 +228,6 @@ export interface NestedScopedConfigs {
   "scale": number,
   "preload": string[],
   "formula": ("sphinx" | "markdown")[],
+  "mode": ("edit" | "view" | "both"),
 }
 
