@@ -1,0 +1,100 @@
+{
+  "publisher": "howcasperwhat",
+  "name": "mathjax-intellisense-python",
+  "displayName": "MathJax IntelliSense for Python",
+  "version": "0.0.3",
+  "preview": true,
+  "description": "A VS Code extension that provides MathJax IntelliSense for Python.",
+  "license": "MIT",
+  "homepage": "https://github.com/howcasperwhat/mathjax-intellisense#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howcasperwhat/mathjax-intellisense.git",
+    "directory": "extensions/mathjax-intellisense-python"
+  },
+  "bugs": "https://github.com/howcasperwhat/mathjax-intellisense/issues",
+  "categories": [
+    "Visualization",
+    "Snippets"
+  ],
+  "main": "./dist/index.js",
+  "icon": "assets/logo.png",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "activationEvents": [
+    "onLanguage:python"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "mathjax-intellisense-python",
+      "properties": {
+        "mathjax-intellisense-python.color": {
+          "type": "string",
+          "default": "auto",
+          "description": "Color of rendered formulas."
+        },
+        "mathjax-intellisense-python.interval": {
+          "type": "number",
+          "default": 300,
+          "minimum": 100,
+          "description": "Formula update interval(ms)."
+        },
+        "mathjax-intellisense-python.code": {
+          "type": "string",
+          "default": "border-bottom: 1px dashed;",
+          "description": "Style of matched LaTeX code."
+        },
+        "mathjax-intellisense-python.preview": {
+          "type": "string",
+          "default": "",
+          "description": "Style of the inline formula preview."
+        },
+        "mathjax-intellisense-python.scale": {
+          "type": "number",
+          "default": 0.8,
+          "description": "Scale factor of the formula preview."
+        },
+        "mathjax-intellisense-python.preload": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Paths to files containing LaTeX preamble to preload."
+        },
+        "mathjax-intellisense-python.formula": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["sphinx", "markdown"]
+          },
+          "default": ["sphinx"],
+          "description": "List of formula parsers to use."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run build",
+    "dev": "pnpm run build -- --watch",
+    "build": "tsup src/index.ts --external vscode",
+    "prepare": "pnpm run update",
+    "update": "vscode-ext-gen --output src/generated/meta.ts",
+    "pack": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:types",
+    "@types/vscode": "^1.84.0",
+    "@vscode/vsce": "catalog:vscode",
+    "fast-glob": "catalog:deps",
+    "mathjax-intellisense-tools": "workspace:*",
+    "pathe": "catalog:deps",
+    "reactive-vscode": "catalog:vscode",
+    "typescript": "catalog:bundling",
+    "vscode-ext-gen": "catalog:vscode",
+    "vscode-textmate-languageservice": "catalog:deps",
+    "xstate": "catalog:deps"
+  }
+}
