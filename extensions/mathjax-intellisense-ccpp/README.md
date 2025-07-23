@@ -21,6 +21,11 @@
 
 <!-- commands -->
 
-**No data**
+| Command                       | Title                                                   |
+| ----------------------------- | ------------------------------------------------------- |
+| `mathjax-intellisense.edit`   | MathJax IntelliSense: MathJax IntelliSense: Edit Mode   |
+| `mathjax-intellisense.view`   | MathJax IntelliSense: MathJax IntelliSense: View Mode   |
+| `mathjax-intellisense.both`   | MathJax IntelliSense: MathJax IntelliSense: Both Modes  |
+| `mathjax-intellisense.toggle` | MathJax IntelliSense: MathJax IntelliSense: Toggle Mode |
 
 <!-- commands -->

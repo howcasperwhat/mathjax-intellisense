@@ -12,12 +12,36 @@ export const extensionId = `${publisher}.${name}`
 /**
  * Type union of all commands
  */
-export type CommandKey = never
+export type CommandKey = 
+  | "mathjax-intellisense.edit"
+  | "mathjax-intellisense.view"
+  | "mathjax-intellisense.both"
+  | "mathjax-intellisense.toggle"
 
 /**
  * Commands map registed by `howcasperwhat.mathjax-intellisense-ccpp`
  */
 export const commands = {
+  /**
+   * MathJax IntelliSense: Edit Mode
+   * @value `mathjax-intellisense.edit`
+   */
+  mathjaxIntellisenseEdit: "mathjax-intellisense.edit",
+  /**
+   * MathJax IntelliSense: View Mode
+   * @value `mathjax-intellisense.view`
+   */
+  mathjaxIntellisenseView: "mathjax-intellisense.view",
+  /**
+   * MathJax IntelliSense: Both Modes
+   * @value `mathjax-intellisense.both`
+   */
+  mathjaxIntellisenseBoth: "mathjax-intellisense.both",
+  /**
+   * MathJax IntelliSense: Toggle Mode
+   * @value `mathjax-intellisense.toggle`
+   */
+  mathjaxIntellisenseToggle: "mathjax-intellisense.toggle",
 } satisfies Record<string, CommandKey>
 
 /**
