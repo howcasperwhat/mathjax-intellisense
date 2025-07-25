@@ -23,6 +23,14 @@ export const selections = useTextEditorSelections(editor)
 export const formulas = shallowRef<SharedFormulaInfo[]>([])
 export const preloads = shallowRef<string[]>([])
 
+export const lang = computed(() => {
+  if (!document.value)
+    return undefined
+  if (document.value.languageId === 'python')
+    return 'python'
+  return undefined
+})
+
 export const perf = new Performance('Main')
 
 export const lineHeight = computed(() => {

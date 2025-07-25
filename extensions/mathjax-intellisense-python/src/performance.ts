@@ -4,6 +4,7 @@ import { debounce } from 'mathjax-intellisense-tools/utils'
 import { computed, ref, useDisposable, watch } from 'reactive-vscode'
 import { ThemeColor, window } from 'vscode'
 import * as Meta from './generated/meta'
+import { lang } from './store/shared'
 
 interface Record {
   times: number[]
@@ -62,7 +63,9 @@ export class Performance {
           : 'editorWarning.foreground'
         : 'editorInfo.foreground')
 
-      this.status.show()
+      lang.value
+        ? this.status.show()
+        : this.status.hide()
     }
     const trigger = debounce(update, 1000)
 
