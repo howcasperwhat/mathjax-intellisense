@@ -50,7 +50,7 @@ export async function useAnnotation(context: ExtensionContext) {
             (max, cur) => len(cur) > len(max) ? cur : max,
             ranges[0],
           )
-          const align = (end - start + 1 > 2 && hidden(ranges))
+          const align = (end - start + 1 > 1 && hidden(ranges))
             ? center((start + end) / 2 - depend.start.line, width / 2)
             : center(0)
           return {

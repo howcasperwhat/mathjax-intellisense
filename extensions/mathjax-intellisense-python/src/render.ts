@@ -5,21 +5,6 @@ import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { parser } from './machine'
 import { color, config, lineHeight, scale } from './store/shared'
 
-// function locate(
-//   franges: Range[],
-//   dranges: Range[],
-// ) {
-//   const [fstart, fend] = [franges.at(0)!.start, franges.at(-1)!.end]
-//   const [dstart, dend] = [
-//     dranges[fstart.line - dranges[0].start.line].start,
-//     dranges[fend.line - dranges[0].start.line].end,
-//   ]
-//   const start = fstart.line + +(dstart.character !== fstart.character)
-//   const end = fend.line - +(dend.character !== fend.character)
-
-//   return { start, end }
-// }
-
 export function render(
   tokens: TextmateToken[],
 ): SharedFormulaInfo[] {

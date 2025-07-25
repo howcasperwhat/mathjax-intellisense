@@ -15,10 +15,26 @@ function locate(
     dranges[fstart.line - dranges[0].start.line].start,
     dranges[fend.line - dranges[0].start.line].end,
   ]
-  const start = fstart.line + +(dstart.character !== fstart.character)
-  const end = fend.line - +(dend.character !== fend.character)
+  const start = fstart.line// + +(dstart.character !== fstart.character)
+  const end = fend.line// - +(dend.character !== fend.character)
+  const ffull = dstart.character !== fstart.character
+  const efull = dend.character !== fend.character
+  const n = end - start + 1
 
-  return { start, end }
+  if (n === 1)
+    return { start, end }
+
+  if (n === 2) {
+    if (ffull && efull)
+      return { start, end }
+    if (ffull)
+      return { start, end: start }
+    if (efull)
+      return { start: end, end }
+    return { start, end: start }
+  }
+
+  return { start: start + +ffull, end: end - +efull }
 }
 
 export function render(
@@ -39,11 +55,13 @@ export function render(
         const { ranges, text } = formula
         const { start, end } = locate(ranges, dranges)
         const n = end - start + 1
+        // eslint-disable-next-line no-console
+        console.log(n, end, start)
 
         const preview = transformer.from(text, {
           color: color.value,
           scale: scale.value,
-          maxHeight: n > 2 ? n * lineHeight.value : Infinity,
+          maxHeight: n > 1 ? n * lineHeight.value : Infinity,
         })
 
         if (preview.error)
