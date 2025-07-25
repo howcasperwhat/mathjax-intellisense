@@ -17,8 +17,8 @@ function locate(
   ]
   const start = fstart.line// + +(dstart.character !== fstart.character)
   const end = fend.line// - +(dend.character !== fend.character)
-  const ffull = dstart.character !== fstart.character
-  const efull = dend.character !== fend.character
+  const ffull = dstart.character === fstart.character
+  const efull = dend.character === fend.character
   const n = end - start + 1
 
   if (n === 1)
@@ -34,7 +34,7 @@ function locate(
     return { start, end: start }
   }
 
-  return { start: start + +ffull, end: end - +efull }
+  return { start: start + +!ffull, end: end - +!efull }
 }
 
 export function render(
