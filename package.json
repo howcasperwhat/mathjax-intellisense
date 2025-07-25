@@ -25,7 +25,10 @@
     "dev:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run dev",
     "dev:python": "pnpm -C extensions/mathjax-intellisense-python run dev",
     "publish:ccpp": "pnpm -C extensions/mathjax-intellisense-ccpp run publish",
-    "publish:python": "pnpm -C extensions/mathjax-intellisense-python run publish"
+    "publish:python": "pnpm -C extensions/mathjax-intellisense-python run publish",
+    "docs:dev": "pnpm -C docs run dev",
+    "docs:build": "pnpm -C docs run build",
+    "docs:preview": "pnpm -C docs run preview"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -36,6 +39,7 @@
     "simple-git-hooks": "catalog:lint",
     "tsup": "catalog:bundling",
     "typescript": "catalog:bundling",
+    "vitepress": "catalog:docs",
     "vitest": "catalog:test",
     "vscode-ext-gen": "catalog:vscode"
   },

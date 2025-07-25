@@ -10,7 +10,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/howcasperwhat/mathjax-intellisense.git",
-    "directory": "packages/mathjax-tools"
+    "directory": "packages/mathjax-intellisense-tools"
   },
   "bugs": "https://github.com/howcasperwhat/mathjax-intellisense/issues",
   "keywords": [],
