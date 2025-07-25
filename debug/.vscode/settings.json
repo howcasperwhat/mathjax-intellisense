@@ -1,0 +1,19 @@
+{
+  "typescript.tsc.autoDetect": "off",
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "never"
+  },
+  "mathjax-intellisense-ccpp.scale": 0.8,
+  "mathjax-intellisense-ccpp.code": "border-bottom: 1px dashed;",
+  "mathjax-intellisense-ccpp.preview": "",
+  "mathjax-intellisense-ccpp.color": "auto",
+  "mathjax-intellisense-ccpp.interval": 200,
+  "mathjax-intellisense-ccpp.preload": [],
+  "mathjax-intellisense-python.mode": "both",
+  "mathjax-intellisense-ccpp.mode": "both",
+  "files.associations": {
+    "complex": "cpp"
+  }
+}
