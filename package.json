@@ -28,13 +28,15 @@
     "publish:python": "pnpm -C extensions/mathjax-intellisense-python run publish",
     "docs:dev": "pnpm -C docs run dev",
     "docs:build": "pnpm -C docs run build",
-    "docs:preview": "pnpm -C docs run preview"
+    "docs:preview": "pnpm -C docs run preview",
+    "docs:deploy": "pnpm run docs:build && gh-pages -d docs/.vitepress/dist"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
     "@vscode/vsce": "catalog:vscode",
     "bumpp": "catalog:dev",
     "eslint": "catalog:lint",
+    "gh-pages": "catalog:dev",
     "jiti": "catalog:lint",
     "simple-git-hooks": "catalog:lint",
     "tsup": "catalog:bundling",

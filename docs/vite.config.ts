@@ -1,10 +1,6 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  optimizeDeps: {
-    exclude: [
-      'vitepress',
-    ],
-  },
+  base: '/mathjax-intellisense/',
   plugins: [],
 })
