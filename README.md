@@ -16,7 +16,7 @@ VSCode · MathJax
 <a href="https://github.com/howcasperwhat/mathjax-intellisense" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/howcasperwhat/mathjax-intellisense?style=social"></a>
 <br>
 <p align="center">
-<a href="https://howcasperwhat.github.io/mathjax-intellisense/extensions/mathjax-intellisense-python.html">📚 Documentation</a>
+<a href="https://howcasperwhat.github.io/mathjax-intellisense/">📚 Documentation</a>
 |
 <a href="https://howcasperwhat.github.io/mathjax-playground/">🤹‍♂️ Playground</a>
 </p>
