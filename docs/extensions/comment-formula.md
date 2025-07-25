@@ -7,7 +7,8 @@
 ## Features
 
 - Render mathematical formulas directly in document of active editor.
-- Support `Markdown` formats by default.
+- Support [`Markdown`](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) formats by default, that is `$$` for block formulas and `$` for inline formulas.
+- Highlight: Use [MathJax Highlight](mathjax-highlight) to highlight formulas in comments.
 
 ![Features](https://github.com/howcasperwhat/comment-formula/blob/main/assets/feature.png?raw=true)
 

@@ -1,5 +1,6 @@
 import type { DefaultTheme } from 'vitepress'
 import { defineConfig } from 'vitepress'
+import { version } from '../package.json'
 
 const title = 'MathJax IntelliSense'
 const description = 'Documentation for MathJax IntelliSense plugins.'
@@ -35,11 +36,6 @@ const Nav: DefaultTheme.NavItem[] = [
     link: 'https://howcasperwhat.github.io/mathjax-playground/',
   },
   {
-    text: 'Guides',
-    items: Guides,
-    activeMatch: '^/guides/',
-  },
-  {
     text: 'Extensions',
     items: Extensions,
     activeMatch: '^/extensions/',
@@ -53,6 +49,19 @@ const Nav: DefaultTheme.NavItem[] = [
     text: 'Commands',
     items: Commands,
     activeMatch: '^/commands/',
+  },
+  {
+    text: `v${version}`,
+    items: [
+      {
+        text: 'Release Notes',
+        link: 'https://github.com/howcasperwhat/mathjax-intellisense/releases',
+      },
+      {
+        text: 'Contributing',
+        link: 'https://github.com/howcasperwhat/mathjax-intellisense/blob/main/.github/CONTRIBUTING.md',
+      },
+    ],
   },
 ]
 
@@ -98,19 +107,33 @@ const Sidebar: DefaultTheme.Sidebar = {
   '/commands/': SidebarItems,
 }
 
+const base = '/mathjax-intellisense/'
 export default defineConfig({
-  base: '/mathjax-intellisense/',
+  base,
   lang: 'en-US',
   title,
+  titleTemplate: title,
   description,
+  lastUpdated: true,
+  cleanUrls: true,
   themeConfig: {
+    search: {
+      provider: 'local',
+    },
     logo: '/favicon.svg',
     nav: Nav,
     sidebar: Sidebar,
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/howcasperwhat/mathjax-intellisense' },
+    ],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2025-PRESENT Casper Huang',
+    },
   },
   head: [
-    ['link', { rel: 'icon', href: 'favicon.svg', type: 'image/svg+xml' }],
-    ['link', { rel: 'alternate icon', href: 'favicon.ico', type: 'image/png', sizes: '16x16' }],
+    ['link', { rel: 'icon', href: `${base}favicon.svg`, type: 'image/svg+xml' }],
+    ['link', { rel: 'alternate icon', href: `${base}favicon.ico`, type: 'image/png', sizes: '16x16' }],
     ['meta', { name: 'author', content: 'Casper Huang' }],
   ],
 })

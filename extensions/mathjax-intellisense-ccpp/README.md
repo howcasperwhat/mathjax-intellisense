@@ -16,7 +16,7 @@ MathJax · Doxygen · Markdown
 <a href="https://marketplace.visualstudio.com/items?itemName=howcasperwhat.mathjax-intellisense-ccpp" target="__blank"><img src="https://img.shields.io/visual-studio-marketplace/i/howcasperwhat.mathjax-intellisense-ccpp.svg?color=63ba83" alt="Visual Studio Marketplace Installs" /></a>
 <br>
 <p align="center">
-<a href="https://howcasperwhat.github.io/mathjax-intellisense/extensions/mathjax-intellisense-ccpp.html">📚 Documentation</a>
+<a href="https://howcasperwhat.github.io/mathjax-intellisense/extensions/mathjax-intellisense-ccpp">📚 Documentation</a>
 |
 <a href="https://marketplace.visualstudio.com/items?itemName=howcasperwhat.mathjax-intellisense-ccpp">🛒 Install</a>
 </p>

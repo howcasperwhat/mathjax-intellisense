@@ -16,7 +16,7 @@ MathJax · Sphinx · Markdown
 <a href="https://marketplace.visualstudio.com/items?itemName=howcasperwhat.mathjax-intellisense-python" target="__blank"><img src="https://img.shields.io/visual-studio-marketplace/i/howcasperwhat.mathjax-intellisense-python.svg?color=63ba83" alt="Visual Studio Marketplace Installs" /></a>
 <br>
 <p align="center">
-<a href="https://howcasperwhat.github.io/mathjax-intellisense/extensions/mathjax-intellisense-python.html">📚 Documentation</a>
+<a href="https://howcasperwhat.github.io/mathjax-intellisense/extensions/mathjax-intellisense-python">📚 Documentation</a>
 |
 <a href="https://marketplace.visualstudio.com/items?itemName=howcasperwhat.mathjax-intellisense-python">🛒 Install</a>
 </p>

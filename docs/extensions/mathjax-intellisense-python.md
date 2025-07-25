@@ -7,7 +7,7 @@
 ## Features
 
 - Render mathematical formulas directly in your docstrings `""" """` or `r""" """`.
-- Support [`Sphinx`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-math) and `Markdown` formats.
+- Support [`Sphinx`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-math) and [`Markdown`](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) formats.
 
 ![Features](https://github.com/howcasperwhat/mathjax-intellisense/blob/main/extensions/mathjax-intellisense-python/assets/feature.png?raw=true)
 

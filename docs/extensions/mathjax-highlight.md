@@ -23,3 +23,14 @@ If the verbose message affects DX, you can configure [`code`](/configs/code.md),
 ### `map`
 
 Some language ids are not the same as the scope names, so you should set `mathjax-highlight.map` to map the language ids to the scope names.
+
+e.g.
+
+```json
+{
+  "mathjax-highlight.map": {
+    "python": "python",
+    "javascript": "js"
+  }
+}
+```

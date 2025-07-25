@@ -12,6 +12,16 @@ pnpm i
 
 ## Development
 
+## Tools
+
+After modifying tools in `packages/`, run the following command to build the tools:
+
+```bash
+pnpm run build
+```
+
+## Extensions
+
 Select an extension to debug in the status bar, and then select a folder to open the extension in VS Code.
 
 ## Update
