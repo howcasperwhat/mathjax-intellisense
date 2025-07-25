@@ -104,7 +104,7 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run build",
+    "vscode:prepublish": "pnpm run update && pnpm run build",
     "dev": "pnpm run build -- --watch",
     "build": "tsup src/index.ts --external vscode",
     "prepare": "pnpm run update",
