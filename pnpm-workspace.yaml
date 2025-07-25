@@ -1,6 +1,7 @@
 packages:
   - extensions/*
   - packages/*
+  - docs
 
 catalogs:
   bundling:
