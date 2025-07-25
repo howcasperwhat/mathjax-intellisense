@@ -104,8 +104,13 @@ export default defineConfig({
   title,
   description,
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/favicon.svg',
     nav: Nav,
     sidebar: Sidebar,
   },
+  head: [
+    ['link', { rel: 'icon', href: 'favicon.svg', type: 'image/svg+xml' }],
+    ['link', { rel: 'alternate icon', href: 'favicon.ico', type: 'image/png', sizes: '16x16' }],
+    ['meta', { name: 'author', content: 'Casper Huang' }],
+  ],
 })

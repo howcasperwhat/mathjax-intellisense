@@ -9,7 +9,7 @@
 - Render mathematical formulas directly in document of active editor.
 - Support `Markdown` formats by default.
 
-![Features](/features/comment-formula.png)
+![Features](https://github.com/howcasperwhat/comment-formula/blob/main/assets/feature.png?raw=true)
 
 ## Configurations
 

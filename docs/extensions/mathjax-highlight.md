@@ -16,7 +16,7 @@ If the verbose message affects DX, you can configure [`code`](/configs/code.md),
 
 - Detect configuration options from [`comment-formula`](comment-formula.md) automatically, and provide syntax highlighting for the custom configurations.
 
-![Features](/features/mathjax-highlight.png)
+![Features](https://github.com/howcasperwhat/mathjax-highlight/blob/main/assets/feature.png?raw=true)
 
 ## Configurations
 

@@ -9,7 +9,7 @@
 - Render mathematical formulas directly in your docstrings `///` or `/** */` comments.
 - Support [`Doxygen`](https://www.doxygen.nl/manual/formulas.html) and `Markdown` formats.
 
-![Features](/features/mathjax-intellisense-ccpp.png)
+![Features](https://github.com/howcasperwhat/mathjax-intellisense/blob/main/extensions/mathjax-intellisense-ccpp/assets/feature.png?raw=true)
 
 ## Configurations
 
