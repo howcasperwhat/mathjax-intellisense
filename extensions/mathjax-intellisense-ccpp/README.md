@@ -1,7 +1,7 @@
 <br>
 
 <p align="center">
-<img src="https://github.com/howcasperwhat/mathjax-intellisense/blob/main/extensions/mathjax-intellisense-ccpp/assets/logo.png?raw=true" style="width:100px;" />
+<img src="https://github.com/howcasperwhat/mathjax-intellisense/blob/main/extensions/mathjax-intellisense-ccpp/assets/logo.png?raw=true" width="100" alt="logo" />
 </p>
 
 <h1 align="center">MathJax IntelliSense<sup>C/C++</sup></h1>
