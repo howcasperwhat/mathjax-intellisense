@@ -99,6 +99,7 @@ const Sidebar: DefaultTheme.Sidebar = {
 }
 
 export default defineConfig({
+  base: '/mathjax-intellisense/',
   lang: 'en-US',
   title,
   description,
