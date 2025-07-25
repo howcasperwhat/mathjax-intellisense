@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp -r",
+    "release": "bumpp -r && pnpm run update",
     "postinstall": "npx simple-git-hooks",
     "prepare": "pnpm run build && pnpm run update",
     "build": "pnpm run build:tools",
