@@ -1,7 +1,7 @@
 {
   "name": "mathjax-intellisense-tools",
   "type": "module",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "Tools for MathJax IntelliSense.",
   "author": "Casper Huang <casper.w.huang@qq.com>",
