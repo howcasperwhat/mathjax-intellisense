@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Extension for C++",
+      "name": "Run Extension for C/C++",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
