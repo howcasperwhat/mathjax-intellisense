@@ -53,8 +53,6 @@ export function render(
         const start = ranges[location.start].start.line
         const end = ranges[location.end].end.line
         const n = end - start + 1
-        // eslint-disable-next-line no-console
-        console.log(n, end, start)
 
         const preview = transformer.from(text, {
           color: color.value,
