@@ -1,5 +1,4 @@
-// Thanks to zhouzq-thu for offering these examples
-// https://github.com/howcasperwhat/comment-formula/issues/25
+// https://gitlab.com/VladyslavUsenko/basalt-headers
 
 /// @brief Uniform cummulative B-spline for SO(3) of order N
 ///
