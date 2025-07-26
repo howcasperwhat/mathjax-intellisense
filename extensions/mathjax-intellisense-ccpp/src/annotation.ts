@@ -25,6 +25,7 @@ export async function useAnnotation(context: ExtensionContext) {
   }
 
   const SHARED_STYLE = 'position:relative; display:inline-block; vertical-align:top; line-height:0;'
+  // top: percentage, left: character
   const center = (top: number, left?: number) => {
     return [
       `top: ${50 + top * 100}%`,
@@ -45,11 +46,15 @@ export async function useAnnotation(context: ExtensionContext) {
   useActiveEditorDecorations(PreviewOptions, () =>
     config.extension.mode === 'edit'
       ? []
-      : formulas.value.map(({ ranges, preview, width, start, end }) => {
-          const depend = ranges.reduce(
-            (max, cur) => len(cur) > len(max) ? cur : max,
-            ranges[0],
-          )
+      : formulas.value.map(({ ranges, preview, width, location }) => {
+          const start = ranges[location.start].start.line
+          const end = ranges[location.end].end.line
+          const depend = ranges
+            .slice(location.start, location.end + 1)
+            .reduce(
+              (max, cur) => len(cur) > len(max) ? cur : max,
+              ranges[0],
+            )
           const align = (end - start + 1 > 1 && hidden(ranges))
             ? center((start + end) / 2 - depend.start.line, width / 2)
             : center(0)

@@ -1,6 +1,7 @@
 import type { Range } from 'vscode'
 import type { TextmateToken } from 'vscode-textmate-languageservice'
-import type { SharedFormulaInfo } from './types'
+import type { FormulaLocation, SharedFormulaInfo } from './types'
+import { assert } from 'node:console'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { isTruthy } from 'mathjax-intellisense-tools/utils'
 import { parser } from './machine'
@@ -9,32 +10,31 @@ import { color, config, lang, lineHeight, scale } from './store/shared'
 function locate(
   franges: Range[],
   dranges: Range[],
-) {
+): FormulaLocation {
   const [fstart, fend] = [franges.at(0)!.start, franges.at(-1)!.end]
   const [dstart, dend] = [
     dranges[fstart.line - dranges[0].start.line].start,
     dranges[fend.line - dranges[0].start.line].end,
   ]
-  const start = fstart.line// + +(dstart.character !== fstart.character)
-  const end = fend.line// - +(dend.character !== fend.character)
-  const ffull = dstart.character === fstart.character
+  const sfull = dstart.character === fstart.character
   const efull = dend.character === fend.character
-  const n = end - start + 1
+  const n = fend.line - fstart.line + 1
+  assert(n === franges.length, 'Formula ranges length mismatch')
 
   if (n === 1)
-    return { start, end }
+    return { start: 0, end: 0 }
 
   if (n === 2) {
-    if (ffull && efull)
-      return { start, end }
-    if (ffull)
-      return { start, end: start }
+    if (sfull && efull)
+      return { start: 0, end: 1 }
+    if (sfull)
+      return { start: 0, end: 0 }
     if (efull)
-      return { start: end, end }
-    return { start, end: start }
+      return { start: 1, end: 1 }
+    return { start: 0, end: 0 }
   }
 
-  return { start: start + +!ffull, end: end - +!efull }
+  return { start: 0 + +!sfull, end: n - 1 - +!efull }
 }
 
 export function render(
@@ -53,7 +53,9 @@ export function render(
       const formulas = parser.formula[name](doc)
       return formulas.map((formula) => {
         const { ranges, text } = formula
-        const { start, end } = locate(ranges, dranges)
+        const location = locate(ranges, dranges)
+        const start = ranges[location.start].start.line
+        const end = ranges[location.end].end.line
         const n = end - start + 1
         // eslint-disable-next-line no-console
         console.log(n, end, start)
@@ -67,7 +69,7 @@ export function render(
         if (preview.error)
           return undefined
 
-        return { ranges, preview, start, end, width }
+        return { ranges, preview, location, width }
       }).filter(isTruthy)
     })
   }).flat(2)

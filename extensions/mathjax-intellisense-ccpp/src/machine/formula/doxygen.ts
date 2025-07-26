@@ -17,8 +17,8 @@ export interface DoxygenFormulaMark {
 const BEGIN_MARKS = ['$', '(', '[', '{'] as const
 type DoxygenFormulaMarkBegin = typeof BEGIN_MARKS[number]
 const FORMULA_MARKERS = {
-  '$': { name: '$$', start: '$', end: '$', sep: '' },
-  '(': { name: '()', start: '(', end: ')', sep: '' },
+  '$': { name: '$$', start: '$', end: '$', sep: ' ' },
+  '(': { name: '()', start: '(', end: ')', sep: ' ' },
   '[': { name: '[]', start: '[', end: ']', sep: '\n' },
   '{': { name: '{}', start: '{', end: '}', sep: '\n' },
 } as Record<DoxygenFormulaMarkBegin, DoxygenFormulaMark>
@@ -279,11 +279,13 @@ export function extract(formula: DoxygenFormula) {
   ).join(formula.mark.sep).slice(3, -3).trim()
 
   if (formula.mark.name === '{}') {
-    const idx = text.indexOf('}{')
+    const idx = text.indexOf('}')
     if (idx === -1)
       return undefined
     const env = text.slice(0, idx)
-    text = `\\begin{${env}}\n${text.slice(idx + 2)}\n\\end{${env}}`
+    text = `\\begin{${env}}\n${
+      text.slice(idx + +(text[idx + 1] === '{') + 1)
+    }\n\\end{${env}}`
   }
 
   return text
