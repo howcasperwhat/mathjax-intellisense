@@ -53,7 +53,7 @@ export async function useAnnotation(context: ExtensionContext) {
             .slice(location.start, location.end + 1)
             .reduce(
               (max, cur) => len(cur) > len(max) ? cur : max,
-              ranges[0],
+              ranges[location.start],
             )
           const align = (end - start + 1 > 1 && hidden(ranges))
             ? center((start + end) / 2 - depend.start.line, width / 2)
