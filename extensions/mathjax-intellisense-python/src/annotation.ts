@@ -54,7 +54,7 @@ export async function useAnnotation(context: ExtensionContext) {
             )
           const align = (end - start + 1 > 1 && hidden(ranges))
             ? center((start + end) / 2 - depend.start.line, width / 2)
-            : center(0)
+            : center((start + end) / 2 - depend.start.line)
           return {
             range: depend,
             renderOptions: {
