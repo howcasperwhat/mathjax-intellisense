@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 import { version } from '../package.json'
 
 const title = 'MathJax IntelliSense'
-const description = 'Documentation for MathJax IntelliSense plugins.'
+const description = 'Documentation for MathJax IntelliSense extensions.'
 
 const Guides: DefaultTheme.NavItemWithLink[] = [
   { text: 'Getting Started', link: '/guides/' },
