@@ -9,14 +9,15 @@ import { SVG } from 'mathjax-full/js/output/svg'
 import { exToPx } from './utils'
 
 export class FormulaPreview {
-  public readonly width: number
-  public readonly height: number
   public readonly code: string
   public readonly error: boolean
   public readonly url: string
-  public constructor(width: number, height: number, code: string, color: string) {
-    this.width = width
-    this.height = height
+  public constructor(
+    public readonly width: number,
+    public readonly height: number,
+    code: string,
+    color: string,
+  ) {
     this.code = code.replaceAll('currentColor', color)
     this.error = code.includes('data-mjx-error')
     this.url = `data:image/svg+xml;base64,${Buffer.from(this.code).toString('base64')}`
