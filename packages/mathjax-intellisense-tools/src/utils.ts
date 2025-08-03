@@ -19,10 +19,8 @@ export function debounce<T extends (...args: any[]) => any>(
 export function resolve(path: string) {
   if (isAbsolute(path))
     return _resolve(path)
-  const folders = workspace.workspaceFolders
-  return folders?.length
-    ? folders.map(f => join(f.uri.fsPath, path))
-    : []
+  const folders = workspace.workspaceFolders ?? []
+  return folders.map(f => join(f.uri.fsPath, path))
 }
 
 export function resolves(path: string | string[]) {
