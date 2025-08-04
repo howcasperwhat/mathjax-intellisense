@@ -40,7 +40,7 @@ export async function useAnnotation(context: ExtensionContext) {
       : config.extension.mode === 'view'
         ? true
         : ranges.every(range => selections.value.some(
-            selections => !selections.intersection(range),
+            selection => !selection.intersection(range),
           ))
 
   useActiveEditorDecorations(PreviewOptions, () =>
