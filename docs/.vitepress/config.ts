@@ -123,6 +123,7 @@ export default defineConfig({
     logo: '/favicon.svg',
     nav: Nav,
     sidebar: Sidebar,
+    outline: 'deep',
     socialLinks: [
       { icon: 'github', link: 'https://github.com/howcasperwhat/mathjax-intellisense' },
     ],
