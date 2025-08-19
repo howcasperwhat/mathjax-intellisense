@@ -87,8 +87,12 @@ export async function useAnnotation(context: ExtensionContext) {
   )
 
   const update = async () => {
+    // eslint-disable-next-line no-console
+    console.log('before', document.value)
     if (!document.value)
       return
+    // eslint-disable-next-line no-console
+    console.log('after', document.value)
 
     const begin = Date.now()
     const tokens = await service.fetch(document.value)
