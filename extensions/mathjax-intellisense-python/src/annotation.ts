@@ -87,8 +87,11 @@ export async function useAnnotation(context: ExtensionContext) {
   )
 
   const update = async () => {
+    if (!document.value)
+      return
+
     const begin = Date.now()
-    const tokens = await service.fetch(document.value!)
+    const tokens = await service.fetch(document.value)
     formulas.value = render(tokens)
     const end = Date.now()
 
