@@ -1,7 +1,7 @@
 import type { DecorationRenderOptions, ExtensionContext, Range } from 'vscode'
 import { transformer } from 'mathjax-intellisense-tools/transformer'
 import { debounce, len } from 'mathjax-intellisense-tools/utils'
-import { computed, useActiveEditorDecorations, watch } from 'reactive-vscode'
+import { computed, useActiveEditorDecorations, useDocumentText, watch } from 'reactive-vscode'
 import { Uri, window, workspace } from 'vscode'
 import { setupWatcher } from './preload'
 import { render } from './render'
@@ -88,11 +88,14 @@ export async function useAnnotation(context: ExtensionContext) {
 
   const update = async () => {
     // eslint-disable-next-line no-console
-    console.log('before', document.value)
+    console.log('start')
+    const text = useDocumentText(document)
+    // eslint-disable-next-line no-console
+    console.log('before', document.value, document.value?.lineAt(0), text.value)
     if (!document.value)
       return
     // eslint-disable-next-line no-console
-    console.log('after', document.value)
+    console.log('after', document.value, document.value?.lineAt(0), text.value)
 
     const begin = Date.now()
     const tokens = await service.fetch(document.value)
