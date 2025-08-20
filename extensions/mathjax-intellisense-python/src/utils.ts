@@ -4,7 +4,7 @@ import TextmateLanguageService from 'vscode-textmate-languageservice'
 
 const services = new Map<string, TokenizerService>()
 
-export async function useTokenService(lang: string, context: ExtensionContext) {
+export async function useTokenService(lang: string, context?: ExtensionContext) {
   if (services.has(lang)) {
     return services.get(lang)!
   }
