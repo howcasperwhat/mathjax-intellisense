@@ -82,23 +82,23 @@
     },
     "commands": [
       {
-        "command": "mathjax-intellisense.edit",
-        "title": "MathJax IntelliSense: Edit Mode",
+        "command": "mathjax-intellisense-python.edit",
+        "title": "Python Edit Mode",
         "category": "MathJax IntelliSense"
       },
       {
-        "command": "mathjax-intellisense.view",
-        "title": "MathJax IntelliSense: View Mode",
+        "command": "mathjax-intellisense-python.view",
+        "title": "Python View Mode",
         "category": "MathJax IntelliSense"
       },
       {
-        "command": "mathjax-intellisense.both",
-        "title": "MathJax IntelliSense: Both Modes",
+        "command": "mathjax-intellisense-python.both",
+        "title": "Python Both Modes",
         "category": "MathJax IntelliSense"
       },
       {
-        "command": "mathjax-intellisense.toggle",
-        "title": "MathJax IntelliSense: Toggle Mode",
+        "command": "mathjax-intellisense-python.toggle",
+        "title": "Python Toggle Mode",
         "category": "MathJax IntelliSense"
       }
     ]
