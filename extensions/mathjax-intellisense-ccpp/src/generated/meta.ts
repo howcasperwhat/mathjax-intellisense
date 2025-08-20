@@ -4,7 +4,7 @@
 // Meta info
 export const publisher = "howcasperwhat"
 export const name = "mathjax-intellisense-ccpp"
-export const version = "0.2.0"
+export const version = "0.2.1"
 export const displayName = "MathJax IntelliSense for C/C++"
 export const description = "A VS Code extension that provides MathJax IntelliSense for C/C++."
 export const extensionId = `${publisher}.${name}`
@@ -13,35 +13,35 @@ export const extensionId = `${publisher}.${name}`
  * Type union of all commands
  */
 export type CommandKey = 
-  | "mathjax-intellisense.edit"
-  | "mathjax-intellisense.view"
-  | "mathjax-intellisense.both"
-  | "mathjax-intellisense.toggle"
+  | "mathjax-intellisense-ccpp.edit"
+  | "mathjax-intellisense-ccpp.view"
+  | "mathjax-intellisense-ccpp.both"
+  | "mathjax-intellisense-ccpp.toggle"
 
 /**
  * Commands map registed by `howcasperwhat.mathjax-intellisense-ccpp`
  */
 export const commands = {
   /**
-   * MathJax IntelliSense: Edit Mode
-   * @value `mathjax-intellisense.edit`
+   * C/C++ Edit Mode
+   * @value `mathjax-intellisense-ccpp.edit`
    */
-  mathjaxIntellisenseEdit: "mathjax-intellisense.edit",
+  edit: "mathjax-intellisense-ccpp.edit",
   /**
-   * MathJax IntelliSense: View Mode
-   * @value `mathjax-intellisense.view`
+   * C/C++ View Mode
+   * @value `mathjax-intellisense-ccpp.view`
    */
-  mathjaxIntellisenseView: "mathjax-intellisense.view",
+  view: "mathjax-intellisense-ccpp.view",
   /**
-   * MathJax IntelliSense: Both Modes
-   * @value `mathjax-intellisense.both`
+   * C/C++ Both Modes
+   * @value `mathjax-intellisense-ccpp.both`
    */
-  mathjaxIntellisenseBoth: "mathjax-intellisense.both",
+  both: "mathjax-intellisense-ccpp.both",
   /**
-   * MathJax IntelliSense: Toggle Mode
-   * @value `mathjax-intellisense.toggle`
+   * C/C++ Toggle Mode
+   * @value `mathjax-intellisense-ccpp.toggle`
    */
-  mathjaxIntellisenseToggle: "mathjax-intellisense.toggle",
+  toggle: "mathjax-intellisense-ccpp.toggle",
 } satisfies Record<string, CommandKey>
 
 /**

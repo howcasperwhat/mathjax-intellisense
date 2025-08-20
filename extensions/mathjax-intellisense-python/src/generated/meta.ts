@@ -4,7 +4,7 @@
 // Meta info
 export const publisher = "howcasperwhat"
 export const name = "mathjax-intellisense-python"
-export const version = "0.2.0"
+export const version = "0.2.1"
 export const displayName = "MathJax IntelliSense for Python"
 export const description = "A VS Code extension that provides MathJax IntelliSense for Python."
 export const extensionId = `${publisher}.${name}`
@@ -13,35 +13,35 @@ export const extensionId = `${publisher}.${name}`
  * Type union of all commands
  */
 export type CommandKey = 
-  | "mathjax-intellisense.edit"
-  | "mathjax-intellisense.view"
-  | "mathjax-intellisense.both"
-  | "mathjax-intellisense.toggle"
+  | "mathjax-intellisense-python.edit"
+  | "mathjax-intellisense-python.view"
+  | "mathjax-intellisense-python.both"
+  | "mathjax-intellisense-python.toggle"
 
 /**
  * Commands map registed by `howcasperwhat.mathjax-intellisense-python`
  */
 export const commands = {
   /**
-   * MathJax IntelliSense: Edit Mode
-   * @value `mathjax-intellisense.edit`
+   * Python Edit Mode
+   * @value `mathjax-intellisense-python.edit`
    */
-  mathjaxIntellisenseEdit: "mathjax-intellisense.edit",
+  edit: "mathjax-intellisense-python.edit",
   /**
-   * MathJax IntelliSense: View Mode
-   * @value `mathjax-intellisense.view`
+   * Python View Mode
+   * @value `mathjax-intellisense-python.view`
    */
-  mathjaxIntellisenseView: "mathjax-intellisense.view",
+  view: "mathjax-intellisense-python.view",
   /**
-   * MathJax IntelliSense: Both Modes
-   * @value `mathjax-intellisense.both`
+   * Python Both Modes
+   * @value `mathjax-intellisense-python.both`
    */
-  mathjaxIntellisenseBoth: "mathjax-intellisense.both",
+  both: "mathjax-intellisense-python.both",
   /**
-   * MathJax IntelliSense: Toggle Mode
-   * @value `mathjax-intellisense.toggle`
+   * Python Toggle Mode
+   * @value `mathjax-intellisense-python.toggle`
    */
-  mathjaxIntellisenseToggle: "mathjax-intellisense.toggle",
+  toggle: "mathjax-intellisense-python.toggle",
 } satisfies Record<string, CommandKey>
 
 /**
