@@ -12,13 +12,14 @@ export interface SingleDoc {
 
 export interface SingleDocMachineContext {
   docs: SingleDoc[]
+  puncidx?: number
   ranges?: Range[]
   start?: number
   line?: number
 }
 
 export interface SingleDocMachineEvent {
-  type: 'PUNCTUATION' | 'LINE_INCREMENT' | 'CHARACTER' | 'END'
+  type: 'PUNCTUATION' | 'LINE_INCREMENT' | 'CHARACTER' | 'CONTINUATION' | 'END'
   tokens: TextmateToken[]
   index: number
   character?: number
@@ -123,6 +124,56 @@ export const SingleDocMachine = createMachine({
         },
         CHARACTER: [
           {
+            guard: ({ context, event }) => {
+              const { tokens, index, character } = event
+              const token = tokens[index]
+              const char = token.text[character!]
+              return context.puncidx === 2 && char === '/'
+            },
+            target: 'Met',
+            actions: assign(({ event }) => {
+              const { tokens, index } = event
+              const token = tokens[index]
+              return {
+                line: token.line,
+                puncidx: undefined,
+              }
+            }),
+          },
+          {
+            guard: ({ context, event }) => {
+              const { tokens, index, character } = event
+              const token = tokens[index]
+              const char = token.text[character!]
+              return (context.puncidx ?? 2) < 2 && char === '/'
+            },
+            target: 'Wait',
+            actions: assign(({ context }) => {
+              return {
+                puncidx: context.puncidx! + 1,
+              }
+            }),
+          },
+          {
+            guard: ({ context, event }) => {
+              const { tokens, index, character } = event
+              const token = tokens[index]
+              const char = token.text[character!]
+              return context.puncidx !== undefined && char !== '/'
+            },
+            target: 'Inside',
+            actions: assign(({ event }) => {
+              const { tokens, index, character } = event
+              const token = tokens[index]
+              const char = token.text[character!]
+              return {
+                line: token.line,
+                start: token.startIndex + character! + +(char === ' '),
+                puncidx: undefined,
+              }
+            }),
+          },
+          {
             guard: ({ event }) => {
               const { tokens, index, character } = event
               const token = tokens[index]
@@ -177,6 +228,14 @@ export const SingleDocMachine = createMachine({
       on: {
         CHARACTER: {
           target: 'Inside',
+        },
+        CONTINUATION: {
+          target: 'Inside',
+          actions: assign(() => {
+            return {
+              puncidx: 0,
+            }
+          }),
         },
         LINE_INCREMENT: {
           target: 'Wait',
@@ -243,6 +302,7 @@ export function parse(
   let line: number = 0
   const scopes = Object.entries({
     PUNCTUATION: `punctuation.definition.comment.documentation.${lang}`,
+    CONTINUATION: `constant.character.escape.line-continuation.${lang}`,
   }) as ['PUNCTUATION', string][]
 
   tokens.forEach((token, index) => {
