@@ -65,6 +65,12 @@ export function parse(
         startIndex = 0
       }
       else {
+        for (const range of ranges) {
+          if (!range.isEmpty)
+            break
+          --texts.length
+          --ranges.length
+        }
         const extracted = extract(texts, doc.type)
         ranges[0] = ranges[0].with({
           start: ranges[0].start.with({
