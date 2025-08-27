@@ -4,7 +4,7 @@
 // Meta info
 export const publisher = "howcasperwhat"
 export const name = "mathjax-intellisense-ccpp"
-export const version = "0.2.1"
+export const version = "0.3.0"
 export const displayName = "MathJax IntelliSense for C/C++"
 export const description = "A VS Code extension that provides MathJax IntelliSense for C/C++."
 export const extensionId = `${publisher}.${name}`
