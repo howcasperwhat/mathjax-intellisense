@@ -2,7 +2,7 @@
   "publisher": "howcasperwhat",
   "name": "mathjax-intellisense-python",
   "displayName": "MathJax IntelliSense for Python",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "preview": true,
   "description": "A VS Code extension that provides MathJax IntelliSense for Python.",
   "license": "MIT",
