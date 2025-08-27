@@ -56,6 +56,7 @@ export type ConfigKey =
   | "mathjax-intellisense-ccpp.preload"
   | "mathjax-intellisense-ccpp.formula"
   | "mathjax-intellisense-ccpp.mode"
+  | "mathjax-intellisense-ccpp.center"
 
 export interface ConfigKeyTypeMap {
   "mathjax-intellisense-ccpp.color": string,
@@ -66,6 +67,7 @@ export interface ConfigKeyTypeMap {
   "mathjax-intellisense-ccpp.preload": string[],
   "mathjax-intellisense-ccpp.formula": ("doxygen" | "markdown")[],
   "mathjax-intellisense-ccpp.mode": ("edit" | "view" | "both"),
+  "mathjax-intellisense-ccpp.center": boolean,
 }
 
 export interface ConfigShorthandMap {
@@ -77,6 +79,7 @@ export interface ConfigShorthandMap {
   preload: "mathjax-intellisense-ccpp.preload",
   formula: "mathjax-intellisense-ccpp.formula",
   mode: "mathjax-intellisense-ccpp.mode",
+  center: "mathjax-intellisense-ccpp.center",
 }
 
 export interface ConfigShorthandTypeMap {
@@ -88,6 +91,7 @@ export interface ConfigShorthandTypeMap {
   preload: string[],
   formula: ("doxygen" | "markdown")[],
   mode: ("edit" | "view" | "both"),
+  center: boolean,
 }
 
 export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
@@ -180,6 +184,16 @@ export const configs = {
     key: "mathjax-intellisense-ccpp.mode",
     default: "both",
   } as ConfigItem<"mathjax-intellisense-ccpp.mode">,
+  /**
+   * Whether to center(horizontal) the rendered formulas.
+   * @key `mathjax-intellisense-ccpp.center`
+   * @default `true`
+   * @type `boolean`
+   */
+  center: {
+    key: "mathjax-intellisense-ccpp.center",
+    default: true,
+  } as ConfigItem<"mathjax-intellisense-ccpp.center">,
 }
 
 export interface ScopedConfigKeyTypeMap {
@@ -191,6 +205,7 @@ export interface ScopedConfigKeyTypeMap {
   "preload": string[],
   "formula": ("doxygen" | "markdown")[],
   "mode": ("edit" | "view" | "both"),
+  "center": boolean,
 }
 
 export const scopedConfigs = {
@@ -204,6 +219,7 @@ export const scopedConfigs = {
     "preload": [],
     "formula": ["doxygen"],
     "mode": "both",
+    "center": true,
   } satisfies ScopedConfigKeyTypeMap,
 }
 
@@ -217,6 +233,7 @@ export interface NestedConfigs {
     "preload": string[],
     "formula": ("doxygen" | "markdown")[],
     "mode": ("edit" | "view" | "both"),
+    "center": boolean,
   },
 }
 
@@ -229,5 +246,6 @@ export interface NestedScopedConfigs {
   "preload": string[],
   "formula": ("doxygen" | "markdown")[],
   "mode": ("edit" | "view" | "both"),
+  "center": boolean,
 }
 

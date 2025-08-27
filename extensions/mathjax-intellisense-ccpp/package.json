@@ -82,6 +82,11 @@
             "both"
           ],
           "description": "Mode of the extension."
+        },
+        "mathjax-intellisense-ccpp.center": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to center(horizontal) the rendered formulas."
         }
       }
     },

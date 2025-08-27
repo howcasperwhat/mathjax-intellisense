@@ -56,6 +56,7 @@ export type ConfigKey =
   | "mathjax-intellisense-python.preload"
   | "mathjax-intellisense-python.formula"
   | "mathjax-intellisense-python.mode"
+  | "mathjax-intellisense-python.center"
 
 export interface ConfigKeyTypeMap {
   "mathjax-intellisense-python.color": string,
@@ -66,6 +67,7 @@ export interface ConfigKeyTypeMap {
   "mathjax-intellisense-python.preload": string[],
   "mathjax-intellisense-python.formula": ("sphinx" | "markdown")[],
   "mathjax-intellisense-python.mode": ("edit" | "view" | "both"),
+  "mathjax-intellisense-python.center": boolean,
 }
 
 export interface ConfigShorthandMap {
@@ -77,6 +79,7 @@ export interface ConfigShorthandMap {
   preload: "mathjax-intellisense-python.preload",
   formula: "mathjax-intellisense-python.formula",
   mode: "mathjax-intellisense-python.mode",
+  center: "mathjax-intellisense-python.center",
 }
 
 export interface ConfigShorthandTypeMap {
@@ -88,6 +91,7 @@ export interface ConfigShorthandTypeMap {
   preload: string[],
   formula: ("sphinx" | "markdown")[],
   mode: ("edit" | "view" | "both"),
+  center: boolean,
 }
 
 export interface ConfigItem<T extends keyof ConfigKeyTypeMap> {
@@ -180,6 +184,16 @@ export const configs = {
     key: "mathjax-intellisense-python.mode",
     default: "both",
   } as ConfigItem<"mathjax-intellisense-python.mode">,
+  /**
+   * Whether to center(horizontal) the rendered formulas.
+   * @key `mathjax-intellisense-python.center`
+   * @default `true`
+   * @type `boolean`
+   */
+  center: {
+    key: "mathjax-intellisense-python.center",
+    default: true,
+  } as ConfigItem<"mathjax-intellisense-python.center">,
 }
 
 export interface ScopedConfigKeyTypeMap {
@@ -191,6 +205,7 @@ export interface ScopedConfigKeyTypeMap {
   "preload": string[],
   "formula": ("sphinx" | "markdown")[],
   "mode": ("edit" | "view" | "both"),
+  "center": boolean,
 }
 
 export const scopedConfigs = {
@@ -204,6 +219,7 @@ export const scopedConfigs = {
     "preload": [],
     "formula": ["sphinx"],
     "mode": "both",
+    "center": true,
   } satisfies ScopedConfigKeyTypeMap,
 }
 
@@ -217,6 +233,7 @@ export interface NestedConfigs {
     "preload": string[],
     "formula": ("sphinx" | "markdown")[],
     "mode": ("edit" | "view" | "both"),
+    "center": boolean,
   },
 }
 
@@ -229,5 +246,6 @@ export interface NestedScopedConfigs {
   "preload": string[],
   "formula": ("sphinx" | "markdown")[],
   "mode": ("edit" | "view" | "both"),
+  "center": boolean,
 }
 

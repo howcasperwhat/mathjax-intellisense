@@ -77,6 +77,11 @@
           "default": "both",
           "enum": ["edit", "view", "both"],
           "description": "Mode of the extension."
+        },
+        "mathjax-intellisense-python.center": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to center(horizontal) the rendered formulas."
         }
       }
     },

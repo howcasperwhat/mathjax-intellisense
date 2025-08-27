@@ -52,9 +52,12 @@ export async function useAnnotation(context: ExtensionContext) {
               (max, cur) => len(cur) > len(max) ? cur : max,
               ranges[location.start],
             )
-          const align = (end - start + 1 > 1 && hidden(ranges))
-            ? center((start + end) / 2 - depend.start.line, width / 2)
-            : center((start + end) / 2 - depend.start.line)
+          const align = center(
+            (start + end) / 2 - depend.start.line,
+            (config.extension.center && end - start + 1 > 1 && hidden(ranges))
+              ? width / 2
+              : undefined,
+          )
           return {
             range: depend,
             renderOptions: {
