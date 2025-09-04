@@ -320,7 +320,7 @@ const MarkdownMachine = createMachine({
               const { doc, index, character } = event
               const line = doc.lines[index]
               const char = line.text[character!]
-              return context.mark!.name === 'inline' && char === '\\'
+              return context.mark!.name === 'inline' && char === '$'
             },
             target: 'OutsideInDollar',
             actions: assign(({ context, event }) => {
@@ -378,7 +378,7 @@ const MarkdownMachine = createMachine({
             target: 'Outside',
             actions: assign(({ context, event }) => {
               const { doc, index } = event
-              const line = doc.lines[index]
+              const prev = doc.lines[index - 1]
               return {
                 formulas: context.formulas.concat({
                   ranges: (context.ranges ?? []).concat(
@@ -386,7 +386,7 @@ const MarkdownMachine = createMachine({
                       context.line!,
                       context.start!,
                       context.line!,
-                      line.range.start.character + event.character! - 1,
+                      prev.range.end.character,
                     ),
                   ),
                   mark: context.mark!,
