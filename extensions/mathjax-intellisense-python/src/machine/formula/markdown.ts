@@ -269,7 +269,7 @@ const MarkdownMachine = createMachine({
                       context.line!,
                       context.start!,
                       context.line!,
-                      line.range.start.character + event.character!,
+                      line.range.start.character + event.character! + 1,
                     ),
                   ),
                   mark: context.mark!,
