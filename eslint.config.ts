@@ -5,6 +5,7 @@ module.exports = antfu({
   typescript: true,
   ignores: [
     'extensions/*/src/generated',
+    'extensions/*/syntaxes',
   ],
   rules: {
     // https://github.com/microsoft/vscode-vsce/issues/1036

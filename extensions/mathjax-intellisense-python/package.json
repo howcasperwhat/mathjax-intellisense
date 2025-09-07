@@ -109,11 +109,40 @@
     ]
   },
   "textmate-languageservice-contributes": {
+    "languages": [
+      {
+        "id": "python",
+        "extensions": [
+          ".py",
+          ".rpy",
+          ".pyw",
+          ".cpy",
+          ".gyp",
+          ".gypi",
+          ".pyi",
+          ".ipy",
+          ".pyt"
+        ],
+        "aliases": [
+          "Python",
+          "py"
+        ],
+        "filenames": [
+          "SConstruct",
+          "SConscript"
+        ],
+        "firstLine": "^#!\\s*/?.*\\bpython[0-9.-]*\\b"
+      }
+    ],
     "grammars": [
       {
         "language": "python",
         "scopeName": "source.python",
-        "path": "./syntax/python.json"
+        "path": "./syntaxes/MagicPython.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.regexp.python",
+        "path": "./syntaxes/MagicRegExp.tmLanguage.json"
       }
     ]
   },
