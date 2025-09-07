@@ -108,6 +108,15 @@
       }
     ]
   },
+  "textmate-languageservice-contributes": {
+    "grammars": [
+      {
+        "language": "python",
+        "scopeName": "source.python",
+        "path": "./syntax/python.json"
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "pnpm run update && pnpm run build",
     "dev": "pnpm run build -- --watch",

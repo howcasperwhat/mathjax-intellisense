@@ -38,6 +38,7 @@
     "jiti": "catalog:lint",
     "lint-staged": "^16.1.2",
     "simple-git-hooks": "catalog:lint",
+    "tm-grammars": "catalog:dev",
     "tsup": "catalog:bundling",
     "typescript": "catalog:bundling",
     "vitepress": "catalog:docs",

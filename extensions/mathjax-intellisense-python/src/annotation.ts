@@ -9,7 +9,7 @@ import { config, document, formulas, perf, preloads, selections } from './store/
 import { useTokenService } from './utils'
 
 export async function useAnnotation(context: ExtensionContext) {
-  const service = await useTokenService('python')
+  const service = await useTokenService('python', context)
 
   const PreviewOptions: DecorationRenderOptions = {
     textDecoration: `none; vertical-align:top;`,

@@ -16,6 +16,7 @@ catalogs:
   dev:
     bumpp: ^10.2.0
     gh-pages: ^6.3.0
+    tm-grammars: ^1.24.11
   docs:
     vitepress: ^1.6.3
   lint:

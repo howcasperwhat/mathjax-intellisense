@@ -113,6 +113,20 @@
       }
     ]
   },
+  "textmate-languageservice-contributes": {
+    "grammars": [
+      {
+        "language": "c",
+        "scopeName": "source.c",
+        "path": "./syntax/c.json"
+      },
+      {
+        "language": "cpp",
+        "scopeName": "source.cpp",
+        "path": "./syntax/cpp.json"
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "pnpm run update && pnpm run build",
     "dev": "pnpm run build -- --watch",

@@ -99,6 +99,9 @@ importers:
       simple-git-hooks:
         specifier: catalog:lint
         version: 2.13.0
+      tm-grammars:
+        specifier: ^1.24.11
+        version: 1.24.11
       tsup:
         specifier: catalog:bundling
         version: 8.5.0(jiti@2.4.2)(postcss@8.5.6)(typescript@5.8.3)(yaml@2.8.0)
@@ -107,13 +110,19 @@ importers:
         version: 5.8.3
       vitepress:
         specifier: catalog:docs
-        version: 1.6.3(@algolia/client-search@5.34.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3)
+        version: 1.6.3(@algolia/client-search@5.34.1)(@types/node@18.19.113)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3)
       vitest:
         specifier: catalog:test
         version: 3.2.4(@types/debug@4.1.12)(jiti@2.4.2)(yaml@2.8.0)
       vscode-ext-gen:
         specifier: catalog:vscode
         version: 1.1.0
+
+  docs:
+    devDependencies:
+      vitepress:
+        specifier: catalog:docs
+        version: 1.6.3(@algolia/client-search@5.34.1)(@types/node@18.19.113)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3)
 
   extensions/mathjax-intellisense-ccpp:
     devDependencies:
@@ -3387,6 +3396,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
@@ -3556,6 +3566,9 @@ packages:
   tinyspy@4.0.3:
     resolution: {integrity: sha512-t2T/WLB2WRgZ9EpE4jgPJ9w+i66UZfDc8wHh0xrwiRNN+UwH98GIJkTeZqX9rg0i0ptwzqW+uYeIF0T4F8LR7A==}
     engines: {node: '>=14.0.0'}
+
+  tm-grammars@1.24.11:
+    resolution: {integrity: sha512-+Ukzg8O02e9SH4+ZxLUAKF0Sfafz8ezc3jrMMJgAyKDoIULcqHh9WPB6qQbPAnRqIT3UxlJyJV10fcNzlFZ4HA==}
 
   tmp@0.2.3:
     resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
@@ -4941,9 +4954,9 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.19)(vue@3.5.18(typescript@5.8.3))':
+  '@vitejs/plugin-vue@5.2.4(vite@5.4.19(@types/node@18.19.113))(vue@3.5.18(typescript@5.8.3))':
     dependencies:
-      vite: 5.4.19
+      vite: 5.4.19(@types/node@18.19.113)
       vue: 3.5.18(typescript@5.8.3)
 
   '@vitest/eslint-plugin@1.3.3(eslint@9.30.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.2.4(@types/debug@4.1.12)(jiti@2.4.2)(yaml@2.8.0))':
@@ -7779,6 +7792,8 @@ snapshots:
 
   tinyspy@4.0.3: {}
 
+  tm-grammars@1.24.11: {}
+
   tmp@0.2.3: {}
 
   to-regex-range@5.0.1:
@@ -7966,12 +7981,13 @@ snapshots:
       - tsx
       - yaml
 
-  vite@5.4.19:
+  vite@5.4.19(@types/node@18.19.113):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.6
       rollup: 4.44.1
     optionalDependencies:
+      '@types/node': 18.19.113
       fsevents: 2.3.3
 
   vite@7.0.5(jiti@2.4.2)(yaml@2.8.0):
@@ -7987,7 +8003,7 @@ snapshots:
       jiti: 2.4.2
       yaml: 2.8.0
 
-  vitepress@1.6.3(@algolia/client-search@5.34.1)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3):
+  vitepress@1.6.3(@algolia/client-search@5.34.1)(@types/node@18.19.113)(markdown-it-mathjax3@4.3.2)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3):
     dependencies:
       '@docsearch/css': 3.8.2
       '@docsearch/js': 3.8.2(@algolia/client-search@5.34.1)(search-insights@2.17.3)
@@ -7996,7 +8012,7 @@ snapshots:
       '@shikijs/transformers': 2.5.0
       '@shikijs/types': 2.5.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 5.2.4(vite@5.4.19)(vue@3.5.18(typescript@5.8.3))
+      '@vitejs/plugin-vue': 5.2.4(vite@5.4.19(@types/node@18.19.113))(vue@3.5.18(typescript@5.8.3))
       '@vue/devtools-api': 7.7.7
       '@vue/shared': 3.5.18
       '@vueuse/core': 12.8.2(typescript@5.8.3)
@@ -8005,7 +8021,7 @@ snapshots:
       mark.js: 8.11.1
       minisearch: 7.1.2
       shiki: 2.5.0
-      vite: 5.4.19
+      vite: 5.4.19(@types/node@18.19.113)
       vue: 3.5.18(typescript@5.8.3)
     optionalDependencies:
       markdown-it-mathjax3: 4.3.2
