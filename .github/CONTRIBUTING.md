@@ -51,3 +51,13 @@ To check the types, run
 ```bash
 pnpm run typecheck
 ```
+
+## Publishing (for maintainers)
+
+To publish the extensions, run
+
+```bash
+pnpm run release
+```
+
+, and then commit `chore: update` and push the changes. This will trigger a GitHub Action to publish the extensions.
