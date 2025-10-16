@@ -39,7 +39,7 @@ We use [ESLint](https://eslint.org/) with [@antfu/eslint-config](https://github.
 To lint the code, run
 
 ```bash
-pnpm run lint --fix
+pnpm run lint -- --fix
 ```
 
 Be sure to fix all linting errors before submitting a pull request.
