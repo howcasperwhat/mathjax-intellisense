@@ -37,8 +37,12 @@ jobs:
 
       # Publish extension to all platforms
       # Or you can skip publishing to specific platforms in CI and run npx vsxpub locally without configuring secrets
-      - name: Publish Extension
-        run: npx vsxpub --no-dependencies
+      - name: Publish Extensions
+        run: |
+          set -e
+          for dir in extensions/*; do
+            pnpm -C "$dir" exec vsxpub --no-dependencies
+          done
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           VSCE_PAT: ${{secrets.VSCE_PAT}}
