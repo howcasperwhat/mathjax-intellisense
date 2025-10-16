@@ -2,7 +2,7 @@
   "publisher": "howcasperwhat",
   "name": "mathjax-intellisense-python",
   "displayName": "MathJax IntelliSense for Python",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "preview": true,
   "description": "A VS Code extension that provides MathJax IntelliSense for Python.",
   "license": "MIT",
@@ -105,6 +105,44 @@
         "command": "mathjax-intellisense-python.toggle",
         "title": "Python Toggle Mode",
         "category": "MathJax IntelliSense"
+      }
+    ]
+  },
+  "textmate-languageservice-contributes": {
+    "languages": [
+      {
+        "id": "python",
+        "extensions": [
+          ".py",
+          ".rpy",
+          ".pyw",
+          ".cpy",
+          ".gyp",
+          ".gypi",
+          ".pyi",
+          ".ipy",
+          ".pyt"
+        ],
+        "aliases": [
+          "Python",
+          "py"
+        ],
+        "filenames": [
+          "SConstruct",
+          "SConscript"
+        ],
+        "firstLine": "^#!\\s*/?.*\\bpython[0-9.-]*\\b"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "python",
+        "scopeName": "source.python",
+        "path": "./syntaxes/MagicPython.tmLanguage.json"
+      },
+      {
+        "scopeName": "source.regexp.python",
+        "path": "./syntaxes/MagicRegExp.tmLanguage.json"
       }
     ]
   },

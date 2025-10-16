@@ -10,8 +10,8 @@ import { useTokenService } from './utils'
 
 export async function useAnnotation(context: ExtensionContext) {
   const services = {
-    c: await useTokenService('c'),
-    cpp: await useTokenService('cpp'),
+    c: await useTokenService('c', context),
+    cpp: await useTokenService('cpp', context),
   }
 
   const PreviewOptions: DecorationRenderOptions = {
