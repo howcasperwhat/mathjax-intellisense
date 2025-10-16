@@ -60,4 +60,4 @@ To publish the extensions, run
 pnpm run release
 ```
 
-, and then commit `chore: update` and push the changes. This will trigger a GitHub Action to publish the extensions.
+, and push the changes. This will trigger a GitHub Action to publish the extensions.
