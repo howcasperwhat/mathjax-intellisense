@@ -26,6 +26,15 @@ MathJax · Doxygen · Markdown
 <img src="https://github.com/howcasperwhat/mathjax-intellisense/blob/main/extensions/mathjax-intellisense-ccpp/assets/feature.png?raw=true" alt="feature" />
 </p>
 
+## Credit
+
+This project is inspired by [Iconify IntelliSense](https://github.com/antfu/vscode-iconify).
+
+This project also uses and benefits from:
+
+- [MathJax](https://www.mathjax.org/): A JavaScript display engine for mathematics.
+- [Reactive VSCode](https://github.com/kermanx/reactive-vscode): Vue Reactivity for VSCode Extension API.
+
 ## License
 
 ### Code
